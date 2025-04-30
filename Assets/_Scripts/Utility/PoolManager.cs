@@ -49,7 +49,7 @@ public class PoolManager : SingletonBehaviour<PoolManager>
         );
         prefabs.Add(pb, pool);
     }
-    public PoolBehaviour Spawn(PoolBehaviour pb, Vector3 pos, Quaternion rot, Transform parent)
+    public PoolBehaviour Spawn(PoolBehaviour pb, Vector3 pos, Quaternion rot, Transform parent = null)
     {
         if(prefabs.ContainsKey(pb) == false)
         {
@@ -58,11 +58,12 @@ public class PoolManager : SingletonBehaviour<PoolManager>
         var pool = prefabs[pb];
         PoolBehaviour clone = pool.Get();
         clone.transform.SetPositionAndRotation(pos,rot);
-        clone.transform.SetParent(parent);
+        if(parent == null) clone.transform.SetParent(transform);
+        else clone.transform.SetParent(parent);
         instances.Add(clone, pool);
         return clone;
     }
-    public void Despawn(PoolBehaviour pb)
+    public void DeSpawn(PoolBehaviour pb)
     {
         if(instances.ContainsKey(pb) == false)
         {
