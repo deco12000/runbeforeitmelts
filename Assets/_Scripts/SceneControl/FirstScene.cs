@@ -8,9 +8,11 @@ public class FirstScene : MonoBehaviour
         yield return YieldInstructionCache.WaitForSeconds(0.1f);
         EventHub.Instance.Invoke<EventDisablePlayer>();
         yield return YieldInstructionCache.WaitForSeconds(0.1f);
-        SceneManager.LoadScene(1);
+        //SceneManager.LoadScene(1);
 
     }
+
+    
 
 
 
