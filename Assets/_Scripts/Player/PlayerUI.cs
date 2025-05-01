@@ -1,11 +1,9 @@
 using UnityEngine;
-public class PlayerUI : PlayerGroup
+public class PlayerUI : MonoBehaviour
 {
-    protected override void Awake()
+    void Awake()
     {
-        pui = this;
-        Debug.Log("1" + pui);
+       PlayerGroup.Instance.pui = this;
     }
-
     
 }

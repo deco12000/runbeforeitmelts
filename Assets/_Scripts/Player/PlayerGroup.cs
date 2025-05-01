@@ -1,11 +1,11 @@
 public class PlayerGroup : SingletonBehaviour<PlayerGroup>
 {
-    protected override bool IsDontDestroy() => false;
+    protected override bool IsDontDestroy() => true;
     public PlayerInput pinput { get; protected set; }
-    public PlayerControl pctrl { get; protected set; }
-    public PlayerCamera pcam { get; protected set; }
-    public PlayerUI pui { get; protected set; }
-    protected override void Awake()
+    public PlayerControl pctrl;
+    public PlayerCamera pcam;
+    public PlayerUI pui;
+    protected virtual void Awake()
     {
         DontDestroyOnLoad(transform.parent);
     }
