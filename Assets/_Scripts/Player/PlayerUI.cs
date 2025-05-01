@@ -3,7 +3,7 @@ public class PlayerUI : MonoBehaviour
 {
     void Awake()
     {
-       PlayerGroup.Instance.pui = this;
+       Player.Instance.pui = this;
     }
     
 }

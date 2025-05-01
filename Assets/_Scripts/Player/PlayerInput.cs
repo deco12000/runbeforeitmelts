@@ -10,7 +10,7 @@ public enum PlatformType { None, Desktop_WebGL, Mobile_WebGL, Windows, Mac, Andr
 public enum ControlType { Touch, }
 public enum LanguageType { English, Korean, Russian, Chinese, Japaness, Spanish, Arabic, Hindi }
 
-public class PlayerInput : PlayerGroup
+public class PlayerInput : MonoBehaviour
 {
     #region UniTask Setting
     CancellationTokenSource cts;
@@ -40,10 +40,9 @@ public class PlayerInput : PlayerGroup
     public ControlType currControlType = ControlType.Touch;
     public LanguageType currLanguageType = LanguageType.Korean;
 
-    protected override void Awake()
+    void Awake()
     {
-        base.Awake();
-        pinput = this;
+        Player.Instance.pinput = this;
     }
 
     void Start()
@@ -75,11 +74,11 @@ public class PlayerInput : PlayerGroup
         while (!token.IsCancellationRequested)
         {
             await UniTask.DelayFrame(1, cancellationToken: token);
-            if (cam == null || !cam.gameObject.activeSelf || !cam.enabled)
+            if (cam == null || !cam.gameObject.activeInHierarchy || !cam.enabled)
             {
                 cam = Camera.main;
                 await UniTask.DelayFrame(50, cancellationToken: token);
-                await UniTask.WaitUntil(() => cam != null && cam.gameObject.activeSelf && cam.enabled);
+                continue;
             }
             eventData.position = Input.mousePosition;
             EventSystem.current.RaycastAll(eventData, cursorObjectsUI);

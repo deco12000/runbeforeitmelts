@@ -4,7 +4,10 @@ public class EventOnHit : Event
 {
     public override UnityAction<EventData> action {get; set;}
 }
-public class EventOnHitData : EventData
+public class OnHitData : EventData
 {
-    public override Transform owner {get; set;}
+    public Transform attacker;
+    public Transform target;
+    public float damage;
+    
 }

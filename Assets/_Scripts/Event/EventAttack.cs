@@ -4,8 +4,9 @@ public class EventAttack : Event
 {
     public override UnityAction<EventData> action {get; set;}
 }
-public class EventAttackData : EventData
+public class HitData : EventData
 {
-    public override Transform owner {get; set;}
+    public Transform owner;
+    public Transform target;
 }
 

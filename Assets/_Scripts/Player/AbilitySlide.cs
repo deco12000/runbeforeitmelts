@@ -1,5 +1,30 @@
 using UnityEngine;
-public class AbilitySlide : MonoBehaviour
+public class AbilitySlide : MonoBehaviour , IAblity
 {
-    
+    #region IAblity Implement
+    bool IAblity.enabled
+    {
+        get => this.enabled;
+        set => this.enabled = value;
+    }
+    float multiplier;
+    void IAblity.MultiplierUpdate(float total)
+    {
+        multiplier = total;
+    }
+    #endregion
+
+
+
+
+
+    void Start()
+    {
+        
+    }
+
+
+
+
+
 }

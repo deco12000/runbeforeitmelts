@@ -4,7 +4,7 @@ public class EventPickItem : Event
 {
     public override UnityAction<EventData> action {get; set;}
 }
-public class EventPickItemData : EventData
+public class PickItemData : EventData
 {
-    public override Transform owner {get; set;}
+    public Transform owner;
 }

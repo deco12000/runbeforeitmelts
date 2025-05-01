@@ -11,5 +11,5 @@ public abstract class Event : MonoBehaviour
 }
 public abstract class EventData
 {
-    public abstract Transform owner {get; set;}
+    
 }
