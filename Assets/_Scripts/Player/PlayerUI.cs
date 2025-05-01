@@ -1,5 +1,9 @@
 using UnityEngine;
-public class PlayerUI : PlayerGroup
+public class PlayerUI : MonoBehaviour
 {
+    void Awake()
+    {
+       PlayerGroup.Instance.pui = this;
+    }
     
 }
