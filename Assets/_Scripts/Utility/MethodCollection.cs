@@ -108,6 +108,36 @@ public static class MethodCollection
     }
 
 
+    // UI RectTransform 에서 Rect 를 얻는 메소드. 만든사람 : 김장훈
+    public static Rect GetRect(this RectTransform rt)
+    {
+        Canvas canvas = rt.GetComponentInParent<Canvas>();
+        if (canvas == null)
+        {
+            Debug.Log("Canvas 없음");
+            return new Rect();
+        }
+        Vector2 size = Vector2.Scale(rt.rect.size, rt.lossyScale);
+        Vector2 screenPos = Vector2.zero;
+        if (canvas.renderMode == RenderMode.ScreenSpaceOverlay)
+        {
+            screenPos = (Vector2)rt.position;
+        }
+        else if (canvas.renderMode == RenderMode.ScreenSpaceCamera && canvas.worldCamera != null)
+        {
+            screenPos = RectTransformUtility.WorldToScreenPoint(canvas.worldCamera, rt.position);
+        }
+        else
+        {
+            Debug.Log("World Space Canvas는 월드 → 스크린 변환 필요");
+        }
+        return new Rect(screenPos - (size * rt.pivot), size);
+    }
+
+
+
+
+
 
 
 
