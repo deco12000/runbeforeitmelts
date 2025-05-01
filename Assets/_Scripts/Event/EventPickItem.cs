@@ -1,9 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-
 public class EventPickItem : Event
 {
-    public override UnityAction<EventData> action { get => throw new System.NotImplementedException(); protected set => throw new System.NotImplementedException(); }
+    public override UnityAction<EventData> action {get; set;}
+}
+public class EventPickItemData : EventData
+{
+    public override Transform owner {get; set;}
 }
