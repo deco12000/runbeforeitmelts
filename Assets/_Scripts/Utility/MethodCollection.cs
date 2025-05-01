@@ -108,8 +108,8 @@ public static class MethodCollection
     }
 
 
-    // UI RectTransform 에서 Rect 를 얻는 메소드. 만든사람 : 김장훈
-    public static Rect GetRect(this RectTransform rt)
+    // UI RectTransform 에서 스크린좌표 Rect 를 얻는 메소드. 만든사람 : 김장훈
+    public static Rect GetScreenRect(this RectTransform rt)
     {
         Canvas canvas = rt.GetComponentInParent<Canvas>();
         if (canvas == null)
