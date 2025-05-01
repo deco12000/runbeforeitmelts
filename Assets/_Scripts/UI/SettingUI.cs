@@ -5,9 +5,14 @@ public class SettingsUI : MonoBehaviour
 {
     public GameObject settingsPanel;
     private RectTransform panelTransform;
-    public float animationDuration = 0.3f;
 
-    public float startScale = 0.5f; // 시작 크기 비율 (70%)
+    [Header("애니메이션 설정")]
+    public float animationDuration = 0.4f;
+    [Range(0f, 1f)] public float startScale = 0.7f;
+
+    public Ease showEase = Ease.OutBack;
+    public Ease hideEase = Ease.InBack;
+
     private bool isVisible = false;
 
     void Start()
@@ -25,15 +30,16 @@ public class SettingsUI : MonoBehaviour
             panelTransform.localScale = Vector3.one * startScale;
 
             panelTransform.DOScale(Vector3.one, animationDuration)
-                .SetEase(Ease.OutBack);
+                .SetEase(showEase);
         }
         else
         {
             panelTransform.DOScale(Vector3.one * startScale, animationDuration)
-                .SetEase(Ease.InBack)
+                .SetEase(hideEase)
                 .OnComplete(() => settingsPanel.SetActive(false));
         }
 
         isVisible = !isVisible;
     }
 }
+

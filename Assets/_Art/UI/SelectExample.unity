@@ -524,8 +524,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   settingsPanel: {fileID: 852510442}
-  animationDuration: 0.3
+  animationDuration: 0.5
   startScale: 0.5
+  showEase: 24
+  hideEase: 26
 --- !u!1 &327086587
 GameObject:
   m_ObjectHideFlags: 0
