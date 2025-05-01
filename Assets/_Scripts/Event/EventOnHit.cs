@@ -1,18 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
-public class EventOnHit : MonoBehaviour
+using UnityEngine.Events;
+public class EventOnHit : Event
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public override UnityAction<EventData> action {get; set;}
+}
+public class EventOnHitData : EventData
+{
+    public override Transform owner {get; set;}
 }

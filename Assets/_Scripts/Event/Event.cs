@@ -1,12 +1,15 @@
 using UnityEngine;
 using UnityEngine.Events;
-
 public abstract class Event : MonoBehaviour
 {
-    public abstract UnityAction<EventData> action { get; protected set; }
+    private UnityAction<EventData> _action = (e) => { };
+    public virtual UnityAction<EventData> action
+    {
+        get => _action;
+        set => _action = value ?? ((e) => { });
+    }
 }
-
 public abstract class EventData
 {
-    public abstract Transform owner {get; protected set;}
+    public abstract Transform owner {get; set;}
 }
