@@ -1,18 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
-public class EventGameStart : MonoBehaviour
+using UnityEngine.Events;
+public class EventScrollStart : Event
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public override UnityAction<EventData> action {get; set;}
+}
+public class EventScrollStartData : EventData
+{
+    public override Transform owner {get; set;}
 }
