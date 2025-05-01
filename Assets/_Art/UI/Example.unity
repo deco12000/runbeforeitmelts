@@ -524,6 +524,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   settingsPanel: {fileID: 852510442}
+  animationDuration: 0.3
+  startScale: 0.5
 --- !u!1 &327086587
 GameObject:
   m_ObjectHideFlags: 0
@@ -1102,7 +1104,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uB7AD \uD0B9"
+  m_text: Ranking
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b28b41a0b2124024a81a0aee3f46e176, type: 2}
   m_sharedMaterial: {fileID: -2017640335554209825, guid: b28b41a0b2124024a81a0aee3f46e176,
@@ -2121,7 +2123,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC2DC \uC791"
+  m_text: Start
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b28b41a0b2124024a81a0aee3f46e176, type: 2}
   m_sharedMaterial: {fileID: -2017640335554209825, guid: b28b41a0b2124024a81a0aee3f46e176,
@@ -2720,7 +2722,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC885 \uB8CC"
+  m_text: Exit
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b28b41a0b2124024a81a0aee3f46e176, type: 2}
   m_sharedMaterial: {fileID: -2017640335554209825, guid: b28b41a0b2124024a81a0aee3f46e176,
