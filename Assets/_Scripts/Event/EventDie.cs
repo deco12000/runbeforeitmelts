@@ -4,7 +4,7 @@ public class EventDie : Event
 {
     public override UnityAction<EventData> action {get; set;}
 }
-public class EventDieData : EventData
+public class DieData : EventData
 {
-    public override Transform owner {get; set;}
+    public Transform owner;
 }

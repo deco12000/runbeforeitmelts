@@ -1,18 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
-public class GameManager : MonoBehaviour
+public class GameManager : SingletonBehaviour<GameManager>
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    protected override bool IsDontDestroy() => true;
+    public Vector3 scrollForward;
+    public float scrollSpeed;
+    public float distance;
+    public int select;
+    public int money;
+    
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
+
+
 }

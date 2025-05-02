@@ -10,7 +10,7 @@ public enum PlatformType { None, Desktop_WebGL, Mobile_WebGL, Windows, Mac, Andr
 public enum ControlType { Touch, }
 public enum LanguageType { English, Korean, Russian, Chinese, Japaness, Spanish, Arabic, Hindi }
 
-public class PlayerInput : PlayerGroup
+public class PlayerInput : MonoBehaviour
 {
     #region UniTask Setting
     CancellationTokenSource cts;
@@ -40,10 +40,9 @@ public class PlayerInput : PlayerGroup
     public ControlType currControlType = ControlType.Touch;
     public LanguageType currLanguageType = LanguageType.Korean;
 
-    protected override void Awake()
+    void Awake()
     {
-        base.Awake();
-        pinput = this;
+        Player.Instance.pinput = this;
     }
 
     void Start()
@@ -75,34 +74,69 @@ public class PlayerInput : PlayerGroup
         while (!token.IsCancellationRequested)
         {
             await UniTask.DelayFrame(1, cancellationToken: token);
-            if (cam == null || !cam.gameObject.activeSelf || !cam.enabled)
+            if (cam == null || !cam.gameObject.activeInHierarchy || !cam.enabled)
             {
                 cam = Camera.main;
                 await UniTask.DelayFrame(50, cancellationToken: token);
-                await UniTask.WaitUntil(() => cam != null && cam.gameObject.activeSelf && cam.enabled);
+                continue;
             }
             eventData.position = Input.mousePosition;
             EventSystem.current.RaycastAll(eventData, cursorObjectsUI);
             cursorRay = cam.ScreenPointToRay(Input.mousePosition);
-            Physics.RaycastNonAlloc(cursorRay, _hitsW, 2000f);
-            cursorObjectsWorld = _hitsW.ToList().Where(x => x.collider != null).OrderBy(x => x.distance).ToList();
+            _hitsW = Physics.RaycastAll(cursorRay,2000f);
+            cursorObjectsWorld = _hitsW.ToList().OrderBy(x => x.distance).ToList();
 #if UNITY_EDITOR
             viewOnly.Clear();
-            cursorObjectsUI.ForEach(x => viewOnly.Add(x.gameObject));
-            cursorObjectsWorld.ForEach(x => viewOnly.Add(x.collider.gameObject));
+            for(int i=0; i<cursorObjectsUI.Count; i++)
+                viewOnly.Add(cursorObjectsUI[i].gameObject);
+            for(int i=0; i<cursorObjectsWorld.Count; i++)
+                viewOnly.Add(cursorObjectsWorld[i].collider.gameObject);
 #endif
         }
     }
 
 
     public Vector2 direction;
+    bool _mouse0;
+    public bool mouse0;
+    public UnityAction<GameObject> OnMouseDown0 = (x) => {};
+    public UnityAction OnMouseUp0 = () => {};
     async UniTask CheckInput(CancellationToken token)
     {
         while (!token.IsCancellationRequested)
         {
             await UniTask.DelayFrame(1, cancellationToken: token);
 
-
+            if(Input.GetMouseButton(0))
+            {
+                if(!_mouse0)
+                {
+                    _mouse0 = true;
+                    await UniTask.DelayFrame(1, cancellationToken: token);
+                    GameObject go;
+                    if(cursorObjectsUI.Count != 0)
+                    {
+                        go = cursorObjectsUI[0].gameObject;
+                    }
+                    else if(cursorObjectsWorld.Count != 0)
+                    {
+                        go = cursorObjectsWorld[0].collider.gameObject;
+                    }
+                    else
+                    {
+                        go = null;
+                    }
+                    OnMouseDown0.Invoke(go);
+                }
+            }
+            else
+            {
+                if(_mouse0)
+                {
+                    _mouse0 = false;
+                    OnMouseUp0.Invoke();
+                }
+            }
         }
     }
 
