@@ -206,7 +206,7 @@ PrefabInstance:
     - target: {fileID: 4901359351932856597, guid: 7fb1d500e814ce6478c27a1aef6dd585,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5715800753699661776, guid: 7fb1d500e814ce6478c27a1aef6dd585,
         type: 3}
@@ -743,7 +743,7 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 632ea510e3cefdc4fb078e2a5c4efb75, type: 3}
---- !u!1 &1417801328
+--- !u!1 &1291165978
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -751,25 +751,59 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1417801329}
+  - component: {fileID: 1291165981}
+  - component: {fileID: 1291165980}
+  - component: {fileID: 1291165979}
   m_Layer: 0
-  m_Name: "-------- \uC774 \uC704\uB294 \uD14C\uC2A4\uD2B8\uC52C\uC5D0 \uD544\uC694\uD558\uB2C8
-    \uAC74\uB4E4\uAE30 X----------------"
+  m_Name: ItemHeal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1417801329
+--- !u!114 &1291165979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1291165978}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2353d9c4052460143b4b6fb0ed993793, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!135 &1291165980
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1291165978}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!4 &1291165981
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1417801328}
+  m_GameObject: {fileID: 1291165978}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.4, y: 0, z: 11.86}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -859,7 +893,7 @@ PrefabInstance:
     - target: {fileID: 1799861841883797925, guid: af67e707e43937547920ce40c861c157,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6779347587432373232, guid: af67e707e43937547920ce40c861c157,
         type: 3}
@@ -1420,4 +1454,4 @@ SceneRoots:
   - {fileID: 1194097777}
   - {fileID: 54935534}
   - {fileID: 1763524550}
-  - {fileID: 1417801329}
+  - {fileID: 1291165981}
