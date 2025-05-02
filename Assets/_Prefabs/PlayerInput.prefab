@@ -45,9 +45,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3274d78b518c674f9d0383cb0bdf5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pctrl: {fileID: 0}
-  pcam: {fileID: 0}
-  pui: {fileID: 0}
   currPlatformType: 5
   currControlType: 0
   currLanguageType: 1

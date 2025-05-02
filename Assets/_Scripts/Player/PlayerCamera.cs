@@ -85,7 +85,7 @@ public class PlayerCamera : MonoBehaviour
         {
             await UniTask.DelayFrame(1, cancellationToken: token);
             await UniTask.WaitUntil(() => target != null , cancellationToken: token);
-            Vector3 smoothPos = Vector3.SmoothDamp(transform.position, target.position,ref _Velocity0, smoothTime);
+            Vector3 smoothPos = Vector3.SmoothDamp(transform.position, target.position, ref _Velocity0, smoothTime);
             transform.position = smoothPos;
         }
     }

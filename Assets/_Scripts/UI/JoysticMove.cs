@@ -44,6 +44,9 @@ public class JoysticMove : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(rt, eventData.position, eventData.pressEventCamera, out Vector2 localPoint))
             return;
 
+        if(input == null) input = Player.Instance.pinput;
+
+
         // 입력 벡터: 현재 위치 - 중심
         Vector2 delta = localPoint - center;
 
