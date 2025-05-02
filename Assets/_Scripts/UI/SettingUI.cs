@@ -3,8 +3,12 @@ using DG.Tweening;
 
 public class SettingsUI : MonoBehaviour
 {
+    [Header("패널")]
     public GameObject settingsPanel;
-    private RectTransform panelTransform;
+    public GameObject rankingPanel;
+
+    private RectTransform settingsTransform;
+    private RectTransform rankingTransform;
 
     [Header("애니메이션 설정")]
     public float animationDuration = 0.4f;
@@ -13,33 +17,58 @@ public class SettingsUI : MonoBehaviour
     public Ease showEase = Ease.OutBack;
     public Ease hideEase = Ease.InBack;
 
-    private bool isVisible = false;
+    private bool isSettingsVisible = false;
+    private bool isRankingVisible = false;
 
     void Start()
     {
-        panelTransform = settingsPanel.GetComponent<RectTransform>();
-        panelTransform.localScale = Vector3.one * startScale;
+        settingsTransform = settingsPanel.GetComponent<RectTransform>();
+        rankingTransform = rankingPanel.GetComponent<RectTransform>();
+
+        settingsTransform.localScale = Vector3.one * startScale;
+        rankingTransform.localScale = Vector3.one * startScale;
+
         settingsPanel.SetActive(false);
+        rankingPanel.SetActive(false);
     }
 
     public void ToggleSettings()
     {
-        if (!isVisible)
+        if (!isSettingsVisible)
         {
             settingsPanel.SetActive(true);
-            panelTransform.localScale = Vector3.one * startScale;
+            settingsTransform.localScale = Vector3.one * startScale;
 
-            panelTransform.DOScale(Vector3.one, animationDuration)
+            settingsTransform.DOScale(Vector3.one, animationDuration)
                 .SetEase(showEase);
         }
         else
         {
-            panelTransform.DOScale(Vector3.one * startScale, animationDuration)
+            settingsTransform.DOScale(Vector3.one * startScale, animationDuration)
                 .SetEase(hideEase)
                 .OnComplete(() => settingsPanel.SetActive(false));
         }
 
-        isVisible = !isVisible;
+        isSettingsVisible = !isSettingsVisible;
+    }
+
+    public void ToggleRanking()
+    {
+        if (!isRankingVisible)
+        {
+            rankingPanel.SetActive(true);
+            rankingTransform.localScale = Vector3.one * startScale;
+
+            rankingTransform.DOScale(Vector3.one, animationDuration)
+                .SetEase(showEase);
+        }
+        else
+        {
+            rankingTransform.DOScale(Vector3.one * startScale, animationDuration)
+                .SetEase(hideEase)
+                .OnComplete(() => rankingPanel.SetActive(false));
+        }
+
+        isRankingVisible = !isRankingVisible;
     }
 }
-
