@@ -26,10 +26,23 @@ public class PlayerCamera : MonoBehaviour
             Debug.Log(e);
         }
         cts = null;
+
+        try
+        {
+            ctsFocus?.Cancel();
+            ctsFocus?.Dispose();
+        }
+        catch (System.Exception e)
+        {
+            
+            Debug.Log(e);
+        }
+        ctsFocus = null;
     }
     #endregion
 
     public Transform target;
+    public Camera cam;
     public float smoothTime = 0.25f;
     Transform camTr;
     Vector3 _velocity;
@@ -41,6 +54,7 @@ public class PlayerCamera : MonoBehaviour
     {
         Player.Instance.pcam = this;
         camTr = transform.GetChild(0);
+        camTr.TryGetComponent(out cam);
     }
 
     public void SetCamera(Vector3 start, Vector3 forward, bool setActive = true, bool smooth = false)
@@ -56,10 +70,34 @@ public class PlayerCamera : MonoBehaviour
         camTr.position = start;
         camTr.rotation = euler;
     }
-    public void SetCamera(Transform target, bool setActive = true, bool smooth = false)
+    public void SetCamera(Transform target, bool setActive = true, bool smooth = false, float time = 1f)
     {
         camTr.gameObject.SetActive(setActive);
-        camTr.forward = target.position - transform.position;
+        if(!smooth)
+        {
+            camTr.forward = target.position - camTr.position;
+        }
+        else
+        {
+            ctsFocus?.Cancel();
+            ctsFocus = new CancellationTokenSource();
+            SetCameraSmooth(target, time, ctsFocus.Token).Forget();
+        }
+    }
+
+    CancellationTokenSource ctsFocus;
+    async UniTask SetCameraSmooth(Transform target, float _time, CancellationToken token)
+    {
+        float startTime = Time.time;
+        Vector3 startForward = camTr.forward;
+        while(!token.IsCancellationRequested && Time.time - startTime < _time)
+        {
+            await UniTask.DelayFrame(1, cancellationToken: token);
+            if(target == null || camTr == null) return;
+            Vector3 lerp = Vector3.Lerp(startForward,target.position - camTr.position, (Time.time - startTime)/_time );
+            camTr.forward =  lerp;
+        }
+        camTr.forward = target.position - camTr.position;
     }
 
     public void StartFollow()
