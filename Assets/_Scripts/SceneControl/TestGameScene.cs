@@ -1,6 +1,12 @@
 using UnityEngine;
-public class InGameScene : MonoBehaviour
+
+
+public class TestGameScene : MonoBehaviour
 {
+    [Header("테스트 게임 플레이 0~2")]
+    [SerializeField] int characterSelect = 0;
+
+
     void Start()
     {
         EventHub.Instance.Invoke<EventEnablePlayer>();
@@ -8,7 +14,9 @@ public class InGameScene : MonoBehaviour
         Player.Instance.pcam.StartFollow();
         EventHub.Instance.Invoke<EventScrollReady>();
         //아랫줄은 추후에 변경
-        Player.Instance.pctrl.modelChanger.Change(0);
+        Player.Instance.pctrl.modelChanger.Change(characterSelect);
     }
+
+    
 
 }

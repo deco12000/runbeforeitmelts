@@ -53,13 +53,11 @@ public class AbilityMove : MonoBehaviour , IAblity
     Vector3 camRightXZ;
     Vector3 moveDir;
     Rigidbody rb;
-
     async UniTask Move(CancellationToken token)
     {
         while(!token.IsCancellationRequested)
         {
             await UniTask.DelayFrame(1, cancellationToken: token);
-
             if(input == null) input = Player.Instance.pinput;
             if(cam == null) cam = Camera.main;
 
@@ -68,7 +66,6 @@ public class AbilityMove : MonoBehaviour , IAblity
                 await UniTask.DelayFrame(50, cancellationToken: token);
                 continue;
             }
-
             camForwardXZ = cam.transform.forward;
             camForwardXZ.y = 0;
             camRightXZ = cam.transform.right;
@@ -83,13 +80,18 @@ public class AbilityMove : MonoBehaviour , IAblity
             }
             camForwardXZ.Normalize();
             camRightXZ.Normalize();
-            
-
             moveDir = input.direction.x * camRightXZ + input.direction.y * camForwardXZ;
-            rb.MovePosition(transform.position += moveSpeed * moveDir * Time.deltaTime);
-
+            MoveDirection();
+            rb.MovePosition(transform.position += moveSpeed * angleSlow * moveDir * Time.deltaTime);
         }
     }
+    void MoveDirection()
+    {
+        transform.forward = Vector3.Slerp(transform.forward, moveDir, 2f * Time.deltaTime);
+        float angle = Vector3.Angle(transform.forward, moveDir);
+        angleSlow = 1f - angle * 0.00277f;
+    }
+    float angleSlow = 1f;
     
 
 }

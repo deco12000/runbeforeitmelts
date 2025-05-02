@@ -32,7 +32,10 @@ public class PlayerCamera : MonoBehaviour
     public Transform target;
     public float smoothTime = 0.25f;
     Transform camTr;
-    Vector3 _Velocity0;
+    Vector3 _velocity;
+    Transform _lastTarget;
+    float _threshold = 0.1f;
+
 
     void Awake()
     {
@@ -79,14 +82,34 @@ public class PlayerCamera : MonoBehaviour
         cts = null;
     }
 
-    async UniTask Follow(CancellationToken token)
+    public async UniTask Follow(CancellationToken token)
     {
         while (!token.IsCancellationRequested)
         {
-            await UniTask.DelayFrame(1, cancellationToken: token);
-            await UniTask.WaitUntil(() => target != null , cancellationToken: token);
-            Vector3 smoothPos = Vector3.SmoothDamp(transform.position, target.position, ref _Velocity0, smoothTime);
-            transform.position = smoothPos;
+            // 타겟이 null일 경우 기다림
+            await UniTask.WaitUntil(() => target != null, cancellationToken: token);
+
+            // 타겟이 바뀌었으면 속도 초기화
+            if (target != _lastTarget)
+            {
+                _velocity = Vector3.zero;
+                _lastTarget = target;
+            }
+
+            // 타겟이 존재하는 동안 추적
+            while (target != null && !token.IsCancellationRequested)
+            {
+                Vector3 current = transform.position;
+                Vector3 targetPos = target.position;
+
+                // 너무 가까우면 이동 생략 (덜덜거림 방지)
+                if (Vector3.Distance(current, targetPos) > _threshold)
+                {
+                    transform.position = Vector3.SmoothDamp(current, targetPos, ref _velocity, smoothTime);
+                }
+
+                await UniTask.Yield(); // 매 프레임 대기
+            }
         }
     }
     

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerControl : Player
 {
+
+    [HideInInspector] public Animator ainm;
     List<IAblity> ablities;
     [SerializeField] List<AblityDisable> ablityDisables = new List<AblityDisable>();
     [SerializeField] List<AblityMultiply> ablityMultiplies = new List<AblityMultiply>();
@@ -12,6 +14,7 @@ public class PlayerControl : Player
         base.Awake();
         pctrl = this;
         InitAblity();
+        modelChanger = GetComponentInChildren<PlayerModelChanger>();
     }
 
     void InitAblity()
@@ -26,6 +29,7 @@ public class PlayerControl : Player
         EventHub.Instance.Register<EventDisablePlayer>(OnDisablePlayer);
         EventHub.Instance.Register<EventEnablePlayer>(OnEnablePlayer);
     }
+    [HideInInspector] public PlayerModelChanger modelChanger;
 
     public void DisableAblity<T>(string reason) where T : IAblity
     {

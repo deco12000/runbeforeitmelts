@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5733114762152164764}
   - component: {fileID: 993273967713829300}
   - component: {fileID: 6131479651766089902}
+  - component: {fileID: 4353209546469722079}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -104,8 +105,10 @@ MonoBehaviour:
   pinput: {fileID: 0}
   pcam: {fileID: 0}
   pui: {fileID: 0}
+  ainm: {fileID: 0}
   ablityDisables: []
   ablityMultiplies: []
+  modelChanger: {fileID: 0}
 --- !u!114 &5733114762152164764
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -141,6 +144,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 24e78c2c5dc18784d968bfd6df2dd03f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4353209546469722079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1799861841883797925}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3db5c1e04047c334ea682215e87a93c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &2566743770984146287
@@ -187,10 +202,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28492a3fe0104e64ca4c9b20b984b58b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  models:
-  - {fileID: 919132149155446097, guid: 1f06c3f1f46c7594cac1fb1fa455bd3c, type: 3}
-  - {fileID: 919132149155446097, guid: 02e8eae1c96fb374d8ec9c5a090594bc, type: 3}
-  - {fileID: 919132149155446097, guid: ef5eef864e617d946a1ee668176839b1, type: 3}
-  animatorContollers:
-  - {fileID: 9100000, guid: 6d123da4015e84a4883277d691eec6cd, type: 2}
-  - {fileID: 9100000, guid: dc54459bcd0efb544940b26e09b0a129, type: 2}
+  prefabs:
+  - {fileID: 7556644027500800177, guid: 7d5f98f9f19e72a478aa26d7f77b4ff1, type: 3}
+  - {fileID: 8287217026058692053, guid: 410677f64b750a24e80953f8ee7ef00a, type: 3}
+  - {fileID: 2436284646596802229, guid: 5497fb7b0ce58f64daabdebe623d728c, type: 3}
