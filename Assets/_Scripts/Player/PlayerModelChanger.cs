@@ -11,6 +11,8 @@ public class PlayerModelChanger : MonoBehaviour
         go.transform.parent = transform;
         go.TryGetComponent(out anim);
         Player.Instance.pctrl.ainm = anim;
+        go.transform.position = transform.position;
+        go.transform.rotation = transform.rotation;
     }
 
 
