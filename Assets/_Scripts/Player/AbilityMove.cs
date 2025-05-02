@@ -1,7 +1,7 @@
 using System.Threading;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
-public class AbilityMove : MonoBehaviour , IAblity
+public class AbilityMove : MonoBehaviour, IAblity
 {
     #region IAblity Implement
     bool IAblity.enabled
@@ -39,7 +39,7 @@ public class AbilityMove : MonoBehaviour , IAblity
         }
         catch (System.Exception e)
         {
-            
+
             Debug.Log(e);
         }
         cts = null;
@@ -48,50 +48,66 @@ public class AbilityMove : MonoBehaviour , IAblity
 
     [SerializeField] float moveSpeed = 4f;
     PlayerInput input;
+    Animator anim;
     Camera cam;
     Vector3 camForwardXZ;
     Vector3 camRightXZ;
     Vector3 moveDir;
     Rigidbody rb;
+    float speed;
     async UniTask Move(CancellationToken token)
     {
-        while(!token.IsCancellationRequested)
+        while (!token.IsCancellationRequested)
         {
             await UniTask.DelayFrame(1, cancellationToken: token);
-            if(input == null) input = Player.Instance.pinput;
-            if(cam == null) cam = Camera.main;
-
-            if(input == null || cam == null || !cam.enabled || !cam.gameObject.activeInHierarchy)
+            if (input == null) input = Player.Instance.pinput;
+            if (cam == null) cam = Camera.main;
+            if(anim == null) anim = GetComponentInChildren<Animator>();
+            if (input == null || cam == null || !cam.enabled || !cam.gameObject.activeInHierarchy)
             {
                 await UniTask.DelayFrame(50, cancellationToken: token);
                 continue;
             }
+            if(input.direction == Vector2.zero)
+            {
+                speed = Mathf.Lerp(speed, 0f, 10f * Time.deltaTime);
+                anim.SetFloat("Move", speed);
+                if(Player.Instance.state == Player.State.Move)
+                {
+                    Player.Instance.state = Player.State.Idle;
+                    
+                }
+                continue;
+            }
+            Player.Instance.state = Player.State.Move;
             camForwardXZ = cam.transform.forward;
             camForwardXZ.y = 0;
             camRightXZ = cam.transform.right;
             camRightXZ.y = 0;
-            if(camForwardXZ == Vector3.zero)
+            if (camForwardXZ == Vector3.zero)
             {
-                camForwardXZ = Quaternion.Euler(0f,-90f,0f) * camRightXZ;
+                camForwardXZ = Quaternion.Euler(0f, -90f, 0f) * camRightXZ;
             }
-            else if(camRightXZ == Vector3.zero)
+            else if (camRightXZ == Vector3.zero)
             {
-                camRightXZ = Quaternion.Euler(0f,90f,0f) * camForwardXZ;
+                camRightXZ = Quaternion.Euler(0f, 90f, 0f) * camForwardXZ;
             }
             camForwardXZ.Normalize();
             camRightXZ.Normalize();
             moveDir = input.direction.x * camRightXZ + input.direction.y * camForwardXZ;
             MoveDirection();
-            rb.MovePosition(transform.position += moveSpeed * angleSlow * moveDir * Time.deltaTime);
+            speed = moveSpeed * angleSlow;
+            anim.SetFloat("Move", speed);
+            rb.MovePosition(transform.position += speed * moveDir * Time.deltaTime);
         }
     }
     void MoveDirection()
     {
-        transform.forward = Vector3.Slerp(transform.forward, moveDir, 2f * Time.deltaTime);
+        transform.forward = Vector3.Slerp(transform.forward, moveDir, 3.3f * Time.deltaTime);
         float angle = Vector3.Angle(transform.forward, moveDir);
         angleSlow = 1f - angle * 0.00277f;
     }
     float angleSlow = 1f;
-    
+
 
 }

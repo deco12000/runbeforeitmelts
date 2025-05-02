@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Deform;
 using UnityEngine;
 
 public class PlayerControl : Player
@@ -52,6 +53,23 @@ public class PlayerControl : Player
                 break;
             }
     }
+
+    public void EnableAblity<T>(string reason) where T : IAblity
+    {
+        string TName = typeof(T).Name;
+        int find = -1;
+        for(int i=0; i<ablityDisables.Count; i++)
+            if(ablityDisables[i].targetAbilityName == TName && ablityDisables[i].reason == reason)
+            {
+                find = i;
+                break;
+            }
+        if(find == -1) return;
+        ablityDisables.RemoveAt(find);
+        if(ablityDisables.Count == 0)
+            ablities[find].enabled = true;
+    }
+
 
     void OnDisablePlayer(EventData data)
     {

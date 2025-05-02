@@ -319,7 +319,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 246162317}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: TitleScene, Assembly-CSharp
         m_MethodName: NextScene
         m_Mode: 1
@@ -608,27 +608,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 246162318}
-  - component: {fileID: 246162317}
   - component: {fileID: 246162319}
   m_Layer: 0
-  m_Name: UIManager
+  m_Name: UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &246162317
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 246162316}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 90523bdf62c339f4983ef5863dd93108, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &246162318
 Transform:
   m_ObjectHideFlags: 0
@@ -4617,6 +4604,6 @@ SceneRoots:
   m_Roots:
   - {fileID: 1958220102}
   - {fileID: 1288363541}
-  - {fileID: 1919319455}
   - {fileID: 1261273231}
+  - {fileID: 1919319455}
   - {fileID: 246162318}

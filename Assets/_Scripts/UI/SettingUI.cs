@@ -11,10 +11,10 @@ public class SettingsUI : MonoBehaviour
     private RectTransform rankingTransform;
 
     [Header("애니메이션 설정")]
-    public float animationDuration = 0.4f;
+    public float animationDuration = 0.2f;
     [Range(0f, 1f)] public float startScale = 0.7f;
 
-    public Ease showEase = Ease.OutBack;
+    public Ease showEase = Ease.OutQuad;
     public Ease hideEase = Ease.InBack;
 
     private bool isSettingsVisible = false;
@@ -34,6 +34,7 @@ public class SettingsUI : MonoBehaviour
 
     public void ToggleSettings()
     {
+        if(isRankingVisible) return;
         if (!isSettingsVisible)
         {
             settingsPanel.SetActive(true);
@@ -54,6 +55,7 @@ public class SettingsUI : MonoBehaviour
 
     public void ToggleRanking()
     {
+        if(isSettingsVisible) return;
         if (!isRankingVisible)
         {
             rankingPanel.SetActive(true);
