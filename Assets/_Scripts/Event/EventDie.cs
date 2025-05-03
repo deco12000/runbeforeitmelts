@@ -6,5 +6,9 @@ public class EventDie : Event
 }
 public class DieData : EventData
 {
+    public DieData(Transform owner)
+    {
+        this.owner = owner;
+    }
     public Transform owner;
 }

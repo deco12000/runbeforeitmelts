@@ -4,6 +4,7 @@ using Unity.Jobs;
 using Unity.Burst;
 using Unity.Mathematics;
 using UnityEngine.Profiling;
+
 public class RainDrop_Job : MonoBehaviour
 {
     private Mesh mesh;
@@ -14,6 +15,7 @@ public class RainDrop_Job : MonoBehaviour
     [SerializeField] private float gravity = -9.8f;
     [SerializeField] private float maxVelocityY = -5f;
     private float velocityY = 0f;
+    float groundY;
     private bool isGrounded = false;
     [SerializeField] private float yDeform = 0.4f;
     [SerializeField] private float xzDeform = 1.3f;
@@ -24,6 +26,7 @@ public class RainDrop_Job : MonoBehaviour
     private float startTime = 0f;
     private NativeArray<float> directions;
     private static readonly int groundLayerMask = 1 << 3;
+
     void Start()
     {
         mesh = Instantiate(GetComponent<MeshFilter>().mesh);
@@ -35,20 +38,20 @@ public class RainDrop_Job : MonoBehaviour
         deformedVertices = new NativeArray<Vector3>(originalVertices.Length, Allocator.Persistent);
         directions = new NativeArray<float>(AnglesOnCircle(UnityEngine.Random.Range(4, 7)), Allocator.Persistent);
     }
+
     void Update()
     {
         if (!isGrounded)
         {
             ApplyGravity();
-            if (CheckGroundHit(out float groundY))
+            if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 100f, groundLayerMask))
             {
-                transform.position = new Vector3(
-                    transform.position.x,
-                    groundY + transform.localScale.y * 0.15f,
-                    transform.position.z
-                );
-                isGrounded = true;
-                DeformMeshAsync(groundY);
+                groundY = hit.point.y;
+                if (transform.position.y < hit.point.y + 0.2f && hit.point.y < transform.position.y)
+                {
+                    isGrounded = true;
+                    DeformMeshAsync(groundY);
+                }
             }
         }
         else
@@ -56,22 +59,14 @@ public class RainDrop_Job : MonoBehaviour
             RelaxMesh();
         }
     }
+
     private void ApplyGravity()
     {
         velocityY += gravity * Time.deltaTime;
         velocityY = Mathf.Clamp(velocityY, maxVelocityY, 0f);
         transform.position += Vector3.up * velocityY * Time.deltaTime;
     }
-    private bool CheckGroundHit(out float groundY)
-    {
-        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 0.2f, groundLayerMask))
-        {
-            groundY = hit.point.y;
-            return true;
-        }
-        groundY = 0f;
-        return false;
-    }
+
     private void DeformMeshAsync(float groundY)
     {
         Profiler.BeginSample("DeformMeshAsync");
@@ -94,6 +89,7 @@ public class RainDrop_Job : MonoBehaviour
         meshCollider.sharedMesh = mesh;
         Profiler.EndSample();
     }
+
     private void RelaxMesh()
     {
         if (startTime < 0.01f) startTime = Time.time;
@@ -119,6 +115,7 @@ public class RainDrop_Job : MonoBehaviour
             meshCollider.sharedMesh = mesh;
         }
     }
+
     public float[] AnglesOnCircle(int count)
     {
         if (count < 2) return new float[] { 0f };
@@ -129,6 +126,7 @@ public class RainDrop_Job : MonoBehaviour
             angles[i] = -180f + i * step;
         return angles;
     }
+
     [BurstCompile]
     struct DeformJob : IJobParallelFor
     {
@@ -140,11 +138,14 @@ public class RainDrop_Job : MonoBehaviour
         [ReadOnly] public float rounded;
         [ReadOnly] public NativeArray<float> directions;
         public NativeArray<Vector3> deformedVertices;
+
         public void Execute(int index)
         {
             Vector3 v = originalVertices[index];
-            float factor = 1f - math.abs(v.y - groundY);
-            v.y = math.lerp(v.y, groundY, factor * yDeform);
+            float factor = 1f - math.abs(v.y - groundY); // 지면과의 차이로 변형 계수 계산
+            factor = math.max(-2f,factor);
+            v.y = math.lerp(v.y, groundY, math.max(0f, factor) * yDeform); // factor가 음수로 가지 않도록 처리
+
             float angleRad = math.atan2(v.z, v.x);
             float angleDeg = angleRad * 57.29578f; // Mathf.Rad2Deg
             float minDelta = 180f;
@@ -158,9 +159,11 @@ public class RainDrop_Job : MonoBehaviour
             float deformScale = 1f + factor * (angleWeight * protruding + 1f) * xzDeform;
             v.x *= deformScale;
             v.z *= deformScale;
+
             deformedVertices[index] = v;
         }
     }
+
     private void OnDestroy()
     {
         if (deformedVertices.IsCreated)

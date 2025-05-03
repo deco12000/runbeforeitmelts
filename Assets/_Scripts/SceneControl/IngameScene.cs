@@ -13,8 +13,10 @@ public class InGameScene : MonoBehaviour
         pctrl =  Player.Instance.pctrl;
         cam = pcam.cam;
         pctrl.modelChanger.Change(GameManager.Instance.select);
-        cam.transform.position = new Vector3(0f,11f,-18.5f);
-        cam.transform.rotation = Quaternion.Euler(22,0,0);
+        pctrl.transform.position = new Vector3(0f,24.17f,0f);
+        pcam.transform.position = new Vector3(0f,24.17f,0f);
+        cam.transform.localPosition = new Vector3(0f,11f,-18.5f);
+        cam.transform.localRotation = Quaternion.Euler(22,0,0);
         cam.fieldOfView = 40f;
         EventHub.Instance.Invoke<EventEnablePlayer>();
         pcam.target = Player.Instance.transform;

@@ -50,6 +50,8 @@ MonoBehaviour:
   currLanguageType: 1
   viewOnly: []
   direction: {x: 0, y: 0}
+  jumpDirection: {x: 0, y: 0}
+  isJump: 0
   mouse0: 0
 --- !u!1 &7710824794928664321
 GameObject:

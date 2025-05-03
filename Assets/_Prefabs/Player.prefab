@@ -100,6 +100,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3db5c1e04047c334ea682215e87a93c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isDead: 0
+  maxHP: 100
+  currHP: 100
 --- !u!114 &2222827246897937749
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -146,6 +149,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46d15aec2891e9e4091ac99a30fefcab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jumpForce: 5
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 8
+  groundCheckDistance: 0.2
 --- !u!1 &2566743770984146287
 GameObject:
   m_ObjectHideFlags: 0

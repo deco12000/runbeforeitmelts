@@ -97,6 +97,8 @@ public class PlayerInput : MonoBehaviour
 
 
     public Vector2 direction;
+    public Vector2 jumpDirection;
+    public bool isJump;
     bool _mouse0;
     public bool mouse0;
     public UnityAction<GameObject> OnMouseDown0 = (x) => {};
