@@ -32,10 +32,24 @@ public class SettingsUI : MonoBehaviour
         rankingPanel.SetActive(false);
     }
 
-    public void ToggleSettings()
+    public void ToggleSettings(bool forceClose = false)
     {
+        if (forceClose)
+        {
+            settingsTransform.DOKill();
+            settingsPanel.SetActive(false);
+            settingsTransform.localScale = Vector3.one * startScale;
+            isSettingsVisible = false;
+            return;
+        }
+
         if (!isSettingsVisible)
         {
+            if (isRankingVisible)
+            {
+                ToggleRanking(forceClose: true);
+            }
+
             settingsPanel.SetActive(true);
             settingsTransform.localScale = Vector3.one * startScale;
 
@@ -52,10 +66,24 @@ public class SettingsUI : MonoBehaviour
         isSettingsVisible = !isSettingsVisible;
     }
 
-    public void ToggleRanking()
+    public void ToggleRanking(bool forceClose = false)
     {
+        if (forceClose)
+        {
+            rankingTransform.DOKill();
+            rankingPanel.SetActive(false);
+            rankingTransform.localScale = Vector3.one * startScale;
+            isRankingVisible = false;
+            return;
+        }
+
         if (!isRankingVisible)
         {
+            if (isSettingsVisible)
+            {
+                ToggleSettings(forceClose: true);
+            }
+
             rankingPanel.SetActive(true);
             rankingTransform.localScale = Vector3.one * startScale;
 
