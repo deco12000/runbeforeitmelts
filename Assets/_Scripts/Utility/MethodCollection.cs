@@ -88,7 +88,7 @@ public static class MethodCollection
         // 두 직선이 거의 평행한 경우
         if (Mathf.Abs(denominator) < 1e-6f)
         {
-            if ((Vector3.Cross(ray1_dir, ray2_dir).magnitude < 1e-6f) 
+            if ((Vector3.Cross(ray1_dir, ray2_dir).magnitude < 1e-6f)
             && (Vector3.Cross(ray1_origin - ray2_origin, ray1_dir).magnitude < 1e-6f))
             {
                 return ray1_origin; // 두 직선이 완전히 포개지는경우 -> 무한히 많은 교점이 생기지만 origin 하나만 리턴시켰음
@@ -107,8 +107,30 @@ public static class MethodCollection
         return (point1 + point2) / 2f;
     }
 
+    // -180 ~ 180 도의 각도중 count 개의 각도 출력. 만든이 : 김장훈
+    public static float[] AnglesOnCircle(int count, float minAngleDistance = -1f)
+    {
+        if (count < 2) return new float[] { 0f };
+        if (minAngleDistance <= 0f)
+            minAngleDistance = 360f / count * 0.8f; // 기본값 설정
+        List<float> angles = new();
+        int tries = 0, maxTries = 1000;
+        while (angles.Count < count && tries++ < maxTries)
+        {
+            float candidate = UnityEngine.Random.Range(-180f, 180f); // -180 ~ 180 범위로 랜덤 각도 생성
+            bool valid = true;
 
-    
+            foreach (var angle in angles)
+                if (Mathf.Abs(Mathf.DeltaAngle(angle, candidate)) < minAngleDistance)
+                {
+                    valid = false;
+                    break;
+                }
+
+            if (valid) angles.Add(candidate);
+        }
+        return angles.ToArray();
+    }
 
 
 
@@ -117,10 +139,12 @@ public static class MethodCollection
 
 
 
-    
+
+
+
     // 게임 여러곳에서 자주 사용하는 유용한 스태틱메소드 생각나면 아래에 더 추가
     // 용도와 사용법 같이 적어주면 좋음
-    
+
 
 
 
@@ -135,7 +159,7 @@ public static class MethodCollection
 }
 
 
-    
+
 
 
 

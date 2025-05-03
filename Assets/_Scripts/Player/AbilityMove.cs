@@ -54,7 +54,7 @@ public class AbilityMove : MonoBehaviour, IAblity
     Vector3 camRightXZ;
     Vector3 moveDir;
     Rigidbody rb;
-    float speed;
+    float speed = 0f;
     async UniTask Move(CancellationToken token)
     {
         while (!token.IsCancellationRequested)
@@ -71,7 +71,7 @@ public class AbilityMove : MonoBehaviour, IAblity
             if(input.direction == Vector2.zero)
             {
                 speed = Mathf.Lerp(speed, 0f, 10f * Time.deltaTime);
-                anim.SetFloat("Move", speed);
+                if(anim != null) anim.SetFloat("Move", speed);
                 if(Player.Instance.state == Player.State.Move)
                 {
                     Player.Instance.state = Player.State.Idle;

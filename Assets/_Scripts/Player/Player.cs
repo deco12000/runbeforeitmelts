@@ -2,11 +2,11 @@ using UnityEngine;
 public class Player : SingletonBehaviour<Player>
 {
     protected override bool IsDontDestroy() => true;
-    [ReadOnly] public PlayerControl pctrl;
-    [ReadOnly] public PlayerInput pinput;
-    [ReadOnly] public PlayerCamera pcam;
-    [ReadOnly] public PlayerUI pui;
-    [ReadOnly] public State state = State.Idle;
+    [ReadOnlyInspector] public PlayerControl pctrl;
+    [ReadOnlyInspector] public PlayerInput pinput;
+    [ReadOnlyInspector] public PlayerCamera pcam;
+    [ReadOnlyInspector] public PlayerUI pui;
+    [ReadOnlyInspector] public State state = State.Idle;
     protected virtual void Awake()
     {
         DontDestroyOnLoad(transform.parent);

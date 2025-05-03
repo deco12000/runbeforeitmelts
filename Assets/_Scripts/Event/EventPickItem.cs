@@ -1,10 +1,10 @@
 using UnityEngine;
 using UnityEngine.Events;
-public class EventPickItem : Event
+public class EventGetItem : Event
 {
     public override UnityAction<EventData> action {get; set;}
 }
-public class PickItemData : EventData
+public class GetItemData : EventData
 {
     public Transform owner;
 }
