@@ -39,14 +39,6 @@ public class PlayerHealth : MonoBehaviour
         currHP = Mathf.Clamp(currHP, 0f, 100f);
         // 플레이어가 공격에 맞았을때 아랫줄에 작성
 
-        
-
-#if UNITY_ANDROID
-        Handheld.Vibrate();
-#elif UNITY_IOS
-        Handheld.Vibrate();
-#endif
-
         if (currHP <= 0f && !isDead)
         {
             //플레이어가 죽었을때 아랫줄에 작성

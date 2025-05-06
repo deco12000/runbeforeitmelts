@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1978235695382101813}
   - component: {fileID: 1293906181491870287}
   - component: {fileID: 3105761596583310646}
-  - component: {fileID: 2855701780940490794}
+  - component: {fileID: 6336174495491853661}
   m_Layer: 0
   m_Name: Height Fog Global
   m_TagString: Untagged
@@ -59,9 +59,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -87,7 +84,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &2855701780940490794
+--- !u!114 &6336174495491853661
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -112,25 +109,25 @@ MonoBehaviour:
   presetNight: {fileID: 0}
   timeOfDay: 0
   categoryFog: 1
-  fogIntensity: 1
+  fogIntensity: 0.2
   fogAxisMode: 1
   fogLayersMode: 10
   fogCameraMode: 0
-  fogColorStart: {r: 0, g: 0.4101777, b: 1, a: 1}
-  fogColorEnd: {r: 0.14524744, g: 0.9782841, b: 1.8113208, a: 1}
+  fogColorStart: {r: 1, g: 1, b: 1, a: 1}
+  fogColorEnd: {r: 0.4009621, g: 0.8232177, b: 1.2319416, a: 1}
   fogColorDuo: 1
-  fogDistanceStart: -60
-  fogDistanceEnd: 60
-  fogDistanceFalloff: 1
-  fogHeightStart: -1
-  fogHeightEnd: 1
+  fogDistanceStart: 30
+  fogDistanceEnd: 300
+  fogDistanceFalloff: 3
+  fogHeightStart: -50
+  fogHeightEnd: 200
   fogHeightFalloff: 1
   farDistanceHeight: 0
   farDistanceOffset: 0
   categorySkybox: 1
-  skyboxFogIntensity: 1
+  skyboxFogIntensity: 0.5
   skyboxFogHeight: 1
-  skyboxFogFalloff: 1
+  skyboxFogFalloff: 3
   skyboxFogOffset: 0
   skyboxFogBottom: 0
   skyboxFogFill: 0

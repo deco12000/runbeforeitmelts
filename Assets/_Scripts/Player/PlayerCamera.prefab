@@ -147,6 +147,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4883565503024778365}
   - component: {fileID: 1682170932260579640}
+  - component: {fileID: 1933085575382878629}
   m_Layer: 0
   m_Name: PlayerCamera
   m_TagString: Untagged
@@ -168,7 +169,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2209857533692067763}
-  - {fileID: 5081266415763398293}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1682170932260579640
@@ -187,170 +187,46 @@ MonoBehaviour:
   cam: {fileID: 373772477758276865}
   selectPath: {x: 0, y: 0}
   trackForward: {x: 0, y: 0, z: 0}
---- !u!1001 &6769000401662140832
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 4883565503024778365}
-    m_Modifications:
-    - target: {fileID: 1978235695382101813, guid: 73984b18d8624134abfc3b3b19f4211f,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1978235695382101813, guid: 73984b18d8624134abfc3b3b19f4211f,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 1978235695382101813, guid: 73984b18d8624134abfc3b3b19f4211f,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -19
-      objectReference: {fileID: 0}
-    - target: {fileID: 1978235695382101813, guid: 73984b18d8624134abfc3b3b19f4211f,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1978235695382101813, guid: 73984b18d8624134abfc3b3b19f4211f,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1978235695382101813, guid: 73984b18d8624134abfc3b3b19f4211f,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1978235695382101813, guid: 73984b18d8624134abfc3b3b19f4211f,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1978235695382101813, guid: 73984b18d8624134abfc3b3b19f4211f,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1978235695382101813, guid: 73984b18d8624134abfc3b3b19f4211f,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1978235695382101813, guid: 73984b18d8624134abfc3b3b19f4211f,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2286126906419129580, guid: 73984b18d8624134abfc3b3b19f4211f,
-        type: 3}
-      propertyPath: m_Name
-      value: Height Fog Global
-      objectReference: {fileID: 0}
-    - target: {fileID: 2855701780940490794, guid: 73984b18d8624134abfc3b3b19f4211f,
-        type: 3}
-      propertyPath: mainCamera
-      value: 
-      objectReference: {fileID: 373772477758276865}
-    - target: {fileID: 2855701780940490794, guid: 73984b18d8624134abfc3b3b19f4211f,
-        type: 3}
-      propertyPath: fogIntensity
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3105761596583310646, guid: 73984b18d8624134abfc3b3b19f4211f,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 2855701780940490794, guid: 73984b18d8624134abfc3b3b19f4211f, type: 3}
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2286126906419129580, guid: 73984b18d8624134abfc3b3b19f4211f,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4704742630962153684}
-  m_SourcePrefab: {fileID: 100100000, guid: 73984b18d8624134abfc3b3b19f4211f, type: 3}
---- !u!1 &4776531739933625676 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2286126906419129580, guid: 73984b18d8624134abfc3b3b19f4211f,
-    type: 3}
-  m_PrefabInstance: {fileID: 6769000401662140832}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &4704742630962153684
+--- !u!114 &1933085575382878629
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4776531739933625676}
+  m_GameObject: {fileID: 6148815772894227691}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8023d2ae1fcb2948a39527720c2087b, type: 3}
+  m_Script: {fileID: 11500000, guid: bb7a02fe12e75ec4c806e75a92a74008, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  styledBanner: 0
-  categoryScene: 1
-  mainCamera: {fileID: 373772477758276865}
-  mainDirectional: {fileID: 0}
-  categoryMode: 1
-  fogMode: 10
-  messagePreset: 0
-  messageTimeOfDay: 0
-  presetMaterial: {fileID: 2100000, guid: 6d8d2073385f92643b96552c9e56c090, type: 2}
-  presetDay: {fileID: 0}
-  presetNight: {fileID: 0}
-  timeOfDay: 0
-  categoryFog: 1
-  fogIntensity: 0.5
-  fogAxisMode: 1
-  fogLayersMode: 10
-  fogCameraMode: 0
-  fogColorStart: {r: 1, g: 1, b: 1, a: 1}
-  fogColorEnd: {r: 0.4009621, g: 0.8232177, b: 1.2319416, a: 1}
-  fogColorDuo: 1
-  fogDistanceStart: 50
-  fogDistanceEnd: 300
-  fogDistanceFalloff: 1
-  fogHeightStart: -50
-  fogHeightEnd: 200
-  fogHeightFalloff: 1
-  farDistanceHeight: 0
-  farDistanceOffset: 0
-  categorySkybox: 1
-  skyboxFogIntensity: 0.5
-  skyboxFogHeight: 1
-  skyboxFogFalloff: 1
-  skyboxFogOffset: 0
-  skyboxFogBottom: 0
-  skyboxFogFill: 0
-  categoryDirectional: 1
-  directionalIntensity: 1
-  directionalFalloff: 1
-  directionalColor: {r: 0.8207547, g: 0.8207547, b: 0.8207547, a: 1}
-  categoryNoise: 1
-  noiseIntensity: 1
-  noiseMin: 0
-  noiseMax: 1
-  noiseScale: 1
-  noiseSpeed: {x: 0.1, y: 0.1, z: 0.1}
-  noiseDistanceEnd: 5
-  categoryAdvanced: 1
-  jitterIntensity: 0
-  renderPriority: 2
-  manualPositionAndScale: 0
-  styledSpace0: 0
-  overrideMaterial: {fileID: 0}
-  overrideCamToVolumeDistance: 1
-  overrideVolumeDistanceFade: 0
-  version: 0
---- !u!4 &5081266415763398293 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1978235695382101813, guid: 73984b18d8624134abfc3b3b19f4211f,
-    type: 3}
-  m_PrefabInstance: {fileID: 6769000401662140832}
-  m_PrefabAsset: {fileID: 0}
+  player: {fileID: 0}
+  occluderLayer:
+    serializedVersion: 2
+    m_Bits: 25
+  ditherMaterial: {fileID: 2100000, guid: 297d834e9725c29449236f117ccea195, type: 2}
+  maxFadeTime: 1
+  fadeCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  checkInterval: 0.05
