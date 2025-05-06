@@ -306,7 +306,7 @@ MonoBehaviour:
   presetNight: {fileID: 0}
   timeOfDay: 0
   categoryFog: 1
-  fogIntensity: 1
+  fogIntensity: 0.5
   fogAxisMode: 1
   fogLayersMode: 10
   fogCameraMode: 0
@@ -322,7 +322,7 @@ MonoBehaviour:
   farDistanceHeight: 0
   farDistanceOffset: 0
   categorySkybox: 1
-  skyboxFogIntensity: 1
+  skyboxFogIntensity: 0.5
   skyboxFogHeight: 1
   skyboxFogFalloff: 1
   skyboxFogOffset: 0

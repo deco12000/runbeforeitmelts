@@ -10,6 +10,7 @@ public class InGameScene : MonoBehaviour
     IEnumerator Start()
     {
         // 화면 페이드인 들어갈 부분
+        GameManager.Instance.FadeIn();
         yield return null;
         foreach(Image img in buttons) img.raycastTarget = false;
         ctrl =  Player.Instance.ctrl;
@@ -30,12 +31,13 @@ public class InGameScene : MonoBehaviour
         Debug.Log("2");
         yield return YieldInstructionCache.WaitForSeconds(1f);
         Debug.Log("1");
+        foreach(Image img in buttons) img.raycastTarget = true;
         yield return YieldInstructionCache.WaitForSeconds(1f);
         Debug.Log("출발");
         ctrl.EnableAblity<AbilityMove>("Ready");
         ctrl.EnableAblity<AbilityJump>("Ready");
         EventHub.Instance.Invoke<EventScrollStart>();
-        foreach(Image img in buttons) img.raycastTarget = true;
+        
 
 
 

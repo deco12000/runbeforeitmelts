@@ -16,7 +16,7 @@ public class SelectScene : MonoBehaviour
     Camera cam;
     IEnumerator Start()
     {
-        //화면 페이드 인 들어갈 부분
+        GameManager.Instance.FadeIn();
         cam = Camera.main;
         notice.gameObject.SetActive(false);
         yield return YieldInstructionCache.WaitForSeconds(0.2f);
@@ -91,10 +91,8 @@ public class SelectScene : MonoBehaviour
         prevClick.OnComplete(() => prevRt.DOScale(1f, 0.2f).SetEase(ease: Ease.OutBounce));
         yield return YieldInstructionCache.WaitForSeconds(0.5f);
 
-        //화면 페이드 아웃 들어갈 부분
-
         yield return YieldInstructionCache.WaitForSeconds(0.8f);
-        SceneManager.LoadSceneAsync(1, LoadSceneMode.Single);
+        GameManager.Instance.LoadSceneAsync(1);
     }
     Tween prevClick;
     public RectTransform prevRt;
@@ -102,10 +100,9 @@ public class SelectScene : MonoBehaviour
     {
         SoundManager.Instance.PlaySFX("UIClickBubble1");
 
-        //화면 페이드 아웃 들어갈 부분
 
         yield return YieldInstructionCache.WaitForSeconds(0.8f);
-        SceneManager.LoadSceneAsync(3, LoadSceneMode.Single);
+        GameManager.Instance.LoadSceneAsync(3);
     }
 
 }

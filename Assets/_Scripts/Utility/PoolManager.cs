@@ -18,7 +18,7 @@ public class PoolManager : SingletonBehaviour<PoolManager>
         prefabs.ToList().ForEach(x => x.Value.Clear());
         prefabs.Clear();
     }
-    public void WarmPool(PoolBehaviour pb, int size = 12)
+    public void WarmPool(PoolBehaviour pb, int size = 50)
     {
         if (prefabs.ContainsKey(pb))
         {

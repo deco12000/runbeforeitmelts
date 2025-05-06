@@ -1,26 +1,22 @@
 using UnityEngine;
-public class ObstacleRainDrop : MonoBehaviour, IObstacle
+using System.Collections;
+public class ObstacleRainDrop : PoolBehaviour
 {
-    string IObstacle.Name {get=>"ObstacleRainDrop";}
-    public void OnAttackHit(EventData ed){}
-    public void OnHit(EventData ed)
+    bool already = false;
+    IEnumerator CoolTime()
     {
-        
+        yield return YieldInstructionCache.WaitForSeconds(1f);
+        already = false;
     }
-
-    void OnEnable()
-    {
-        
-    }
-
-    void OnDisable()
-    {
-        
-    }
-
     void OnTriggerStay(Collider other)
     {
-        
+        if(!already)
+        {
+            already = true;
+            AttackData attackData = new AttackData(transform,Player.Instance.transform,10f);
+            EventHub.Instance.Invoke<EventAttack>(attackData);
+            StartCoroutine("CoolTime");
+        }
     }
 
 

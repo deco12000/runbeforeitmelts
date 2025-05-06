@@ -41,7 +41,7 @@ public class AbilityMove : MonoBehaviour, IAblity
         cts = null;
     }
     #endregion
-
+    
     [SerializeField] float moveSpeed = 4f;
     PlayerInput input;
     Animator anim;

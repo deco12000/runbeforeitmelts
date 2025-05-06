@@ -4,7 +4,7 @@ using Unity.Jobs;
 using Unity.Burst;
 using Unity.Mathematics;
 using UnityEngine.Profiling;
-using UnityEngine.UIElements;
+using DG.Tweening;
 
 public class RainDrop_Job : MonoBehaviour
 {
@@ -28,14 +28,23 @@ public class RainDrop_Job : MonoBehaviour
     private NativeArray<float> directions;
     private NativeArray<float> lengths;
     private static readonly int groundLayerMask = 1 << 0 | 1 << 3;
+    [SerializeField] PoolBehaviour pb;
 
-    void Start()
+    void Awake()
     {
         mesh = Instantiate(GetComponent<MeshFilter>().mesh);
         GetComponent<MeshFilter>().mesh = mesh;
         TryGetComponent(out meshCollider);
         originalVertices = mesh.vertices;
+    }
 
+    void OnEnable()
+    {
+        Reset();
+    }
+
+    void Start()
+    {
         nativeVertices = new NativeArray<Vector3>(originalVertices, Allocator.Persistent);
         deformedVertices = new NativeArray<Vector3>(originalVertices.Length, Allocator.Persistent);
         directions = new NativeArray<float>(AnglesOnCircle(UnityEngine.Random.Range(4, 6)), Allocator.Persistent);
@@ -44,7 +53,20 @@ public class RainDrop_Job : MonoBehaviour
         {
             lengths[i] = UnityEngine.Random.Range(0.85f, 1.15f);
         }
+    }
 
+    void Reset()
+    {
+        mesh.vertices = originalVertices;
+        mesh.RecalculateNormals();
+        meshCollider.sharedMesh = null;
+        meshCollider.sharedMesh = mesh;
+
+        // 상태값 초기화
+        isGrounded = false;
+        velocityY = 0f;
+        startTime = 0f;
+        transform.localPosition = Vector3.zero;  // 위치 초기화
     }
 
     void Update()
@@ -78,32 +100,57 @@ public class RainDrop_Job : MonoBehaviour
     private void DeformMeshAsync(float groundY)
     {
         Profiler.BeginSample("DeformMeshAsync");
+
+        // DeformJob을 실행하기 전에 deformedVertices를 항상 새로 생성하거나 재사용하지 않도록 수정
+        NativeArray<Vector3> deformVerticesCopy = new NativeArray<Vector3>(nativeVertices.Length, Allocator.TempJob);
+        NativeArray<float> directionsCopy = new NativeArray<float>(directions.Length, Allocator.TempJob);
+        NativeArray<float> lengthsCopy = new NativeArray<float>(lengths.Length, Allocator.TempJob);
+
+        // 데이터를 복사
+        nativeVertices.CopyTo(deformVerticesCopy);
+        directions.CopyTo(directionsCopy);
+        lengths.CopyTo(lengthsCopy);
+
         var deformJob = new DeformJob
         {
-            originalVertices = nativeVertices,
+            originalVertices = deformVerticesCopy,
             groundY = groundY,
             yDeform = yDeform,
             xzDeform = xzDeform,
             protruding = protruding,
             rounded = rounded,
-            directions = directions,
-            lengths = lengths,
+            directions = directionsCopy,
+            lengths = lengthsCopy,
             deformedVertices = deformedVertices
-
         };
         JobHandle handle = deformJob.Schedule(nativeVertices.Length, 64);
         handle.Complete();
+
+        // 결과를 메쉬에 반영
         mesh.vertices = deformedVertices.ToArray();
         mesh.RecalculateNormals();
         meshCollider.sharedMesh = null;
         meshCollider.sharedMesh = mesh;
+
+        // 해제
+        deformVerticesCopy.Dispose();
+        directionsCopy.Dispose();
+        lengthsCopy.Dispose();
+
         Profiler.EndSample();
     }
 
     private void RelaxMesh()
     {
         if (startTime < 0.01f) startTime = Time.time;
-        if (Time.time - startTime > maxTime) return;
+        if (Time.time - startTime > maxTime)
+        {
+            transform.DOLocalMoveY(-0.5f, 2f).OnComplete(() => {
+                pb.DeSpawn();
+            });
+            return;
+        }
+
         float lerpT = Time.deltaTime * recoverySpeed;
         bool changed = false;
         for (int i = 0; i < deformedVertices.Length; i++)
@@ -117,6 +164,7 @@ public class RainDrop_Job : MonoBehaviour
 
             deformedVertices[i] = v;
         }
+
         if (changed)
         {
             mesh.vertices = deformedVertices.ToArray();

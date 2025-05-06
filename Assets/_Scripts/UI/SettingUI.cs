@@ -70,6 +70,8 @@ public class SettingsUI : MonoBehaviour
 
             SoundManager.Instance.PlaySFX("UIClickCrispy1");
         }
+        PlayerPrefs.SetFloat("volumeBGM", sliderVolumeBGM.value);
+        PlayerPrefs.SetFloat("volumeSFX", sliderVolumeSFX.value);
 
         isSettingsVisible = !isSettingsVisible;
     }
@@ -132,11 +134,11 @@ public class SettingsUI : MonoBehaviour
     public void SetVolumeBGM()
     {
         SoundManager.Instance.SetVolumeBGM(sliderVolumeBGM.value);
+        
     }
     public void SetVolumeSFX()
     {
         SoundManager.Instance.SetVolumeSFX(sliderVolumeSFX.value);
-
     }
 
     

@@ -1,9 +1,36 @@
 using System.Collections.Generic;
+using System.Collections;
+using System.Threading;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 using TMPro;
 public class StageControl : MonoBehaviour
 {
-    void Start()
+    #region UniTask Setting
+    CancellationTokenSource cts;
+    void OnEnable()
+    {
+        cts = new CancellationTokenSource();
+        Application.quitting += () => UniTaskCancel();
+    }
+    void OnDisable() { UniTaskCancel(); }
+    void OnDestroy() { UniTaskCancel(); }
+    void UniTaskCancel()
+    {
+        try
+        {
+            cts?.Cancel();
+            cts?.Dispose();
+        }
+        catch (System.Exception e)
+        {
+
+            Debug.Log(e);
+        }
+        cts = null;
+    }
+    #endregion
+    IEnumerator Start()
     {
         camTr = Player.Instance.cam.transform;
         cam = Player.Instance.cam;
@@ -23,6 +50,8 @@ public class StageControl : MonoBehaviour
         currTrack.SpawnItems();
         CheckCurrTrackInfo();
         //
+        yield return YieldInstructionCache.WaitForSeconds(4f);
+        SpawnRainLoop(cts.Token).Forget();
     }
     void Update()
     {
@@ -115,6 +144,13 @@ public class StageControl : MonoBehaviour
         {
             track.transform.position += GameManager.Instance.scrollSpeed * Time.deltaTime * dir.normalized;
         }
+        // foreach(var rain in rains)
+        // {
+        //     rain.transform.position += GameManager.Instance.scrollSpeed * Time.deltaTime * dir.normalized;
+        // }
+
+
+
         if(count < selectPath.y)
         {
             count = selectPath.y;
@@ -170,6 +206,47 @@ public class StageControl : MonoBehaviour
         Track track = pb as Track;
         activeTracks.Add(track);
     }
+    // Rain
+
+    [SerializeField] GameObject obstacleRainDrop;
+    async UniTask SpawnRainLoop(CancellationToken token)
+    {
+        Transform camTr = Player.Instance.cam.transform;
+        PoolBehaviour pb = obstacleRainDrop.GetComponent<PoolBehaviour>();
+        while(!token.IsCancellationRequested)
+        {
+            await UniTask.DelayFrame(20, cancellationToken: token);
+            Vector3 vector = Random.Range(5f,30f) * Random.insideUnitSphere;
+            vector.y = 0f;
+            Vector3 pos = camTr.position + 30f * camTr.forward + vector + Random.Range(10f,40f) * Vector3.up;
+            Ray ray = new Ray();
+            ray.direction = Vector3.down;
+            ray.origin = pos;
+            RaycastHit hit;
+            Physics.Raycast(ray,out hit,200f);
+            if(hit.collider == null) continue;
+            if(hit.collider.gameObject.layer != 3) continue;
+            var rain = PoolManager.Instance.Spawn(pb,pos,Quaternion.identity);
+            rains.Add(rain.transform);
+        }
+    }
+    List<Transform> rains = new List<Transform>();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // 이 밑으로는 HDRI 관련
     [SerializeField] Renderer[] spheres;
@@ -198,6 +275,8 @@ public class StageControl : MonoBehaviour
     }
     // 이 밑으로는 FarObject 관련
     public List<GameObject> farObjects = new List<GameObject>();
+
+
 
 
 

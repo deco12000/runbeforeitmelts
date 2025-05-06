@@ -11,15 +11,15 @@ public class PlayerHealth : MonoBehaviour
 
     void Start()
     {
-        EventHub.Instance.Register<EventHit>(OnHit);
+        EventHub.Instance.Register<EventAttack>(OnAttack);
     }
 
 
 
 
-    void OnHit(EventData ed)
+    void OnAttack(EventData ed)
     {
-        HitData hd = ed as HitData;
+        AttackData hd = ed as AttackData;
         if(hd == null) return;
         if(hd.target != transform) return;
         currHP -= hd.damage;

@@ -28,7 +28,7 @@ public class SFX : PoolBehaviour
     }
     #endregion
 
-    [SerializeField] AudioSource aus;
+    public AudioSource aus;
 
     public void PlayDespawn(AudioClip clip, float vol, float time)
     {
@@ -43,6 +43,7 @@ public class SFX : PoolBehaviour
         if (!gameObject.activeInHierarchy) gameObject.SetActive(true);
         if (!aus.enabled) aus.enabled = true;
         await UniTask.Delay(2, ignoreTimeScale: true, cancellationToken:token);
+        aus.pitch = Random.Range(0.95f,1.05f);
         aus.Play();
         await UniTask.Delay((int)(1000f * (time + 0.2f)),ignoreTimeScale: true , cancellationToken:token);
         base.DeSpawn();
