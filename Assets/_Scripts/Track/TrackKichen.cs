@@ -12,18 +12,10 @@ public class TackKichen : Track
     {
         spawnPoint = transform.Find("SpawnPoints");
     }
+
     public override void SpawnItems()
     {
-        for(int i=0; i<items.Length; i++)
-        {
-
-        }
+        
     }
-    public override void SpawnObstacles()
-    {
-        for(int i=0; i<obstacles.Length; i++)
-        {
-            
-        }
-    }
+    
 }

@@ -9,9 +9,4 @@ public class TrackEmpty : Track
     {
         
     }
-
-    public override void SpawnObstacles()
-    {
-        
-    }
 }

@@ -52,7 +52,7 @@ public class RainDrop : PoolBehaviour
             if (!already)
             {
                 already = true;
-                AttackData attackData = new AttackData(transform, Player.Instance.ctrl.transform, 18f);
+                AttackData attackData = new AttackData(transform, Player.Instance.ctrl.transform, 23f);
                 EventHub.Instance.Invoke<EventAttack>(attackData);
                 StartCoroutine("CoolTime");
                 

@@ -12,19 +12,34 @@ public class PlayerHealth : MonoBehaviour
     void Start()
     {
         EventHub.Instance.Register<EventAttack>(OnAttack);
+        EventHub.Instance.Register<EventGetItem>(OnGetItem);
     }
 
 
+    void OnGetItem(EventData ed)
+    {
+        if(isDead) return;
+        GetItemData d = ed as GetItemData;
+        if(d.Name == "Heal")
+        {
+            currHP += 25f;
+            currHP = Mathf.Clamp(currHP, 0f, 100f);
+
+        }
+    }
 
 
     void OnAttack(EventData ed)
     {
+        if(isDead) return;
         AttackData hd = ed as AttackData;
         if (hd == null) return;
         if (hd.target != transform) return;
         currHP -= hd.damage;
         currHP = Mathf.Clamp(currHP, 0f, 100f);
         // 플레이어가 공격에 맞았을때 아랫줄에 작성
+
+        
 
 #if UNITY_ANDROID
         Handheld.Vibrate();

@@ -13,7 +13,7 @@ public class HealItem : MonoBehaviour
     public Ease rotationEase = Ease.Linear;
 
     [Header("체력 회복량")]
-    public int healAmount = 50;
+    public int healAmount = 25;
 
     [Header("이펙트")]
     public GameObject idleEffectPrefab;     // 아이템 존재 중 이펙트
@@ -36,13 +36,18 @@ public class HealItem : MonoBehaviour
             .SetLoops(-1, LoopType.Restart)
             .SetEase(rotationEase);
 
-        // 아이템 지속 이펙트 생성 (아이템보다 아래, 부모 없음)
-        if (idleEffectPrefab != null)
-        {
-            Vector3 offsetPosition = transform.position + new Vector3(0f, -0.8f, 0f);
-            idleEffectInstance = Instantiate(idleEffectPrefab, offsetPosition, Quaternion.identity);
-        }
+        // // 아이템 지속 이펙트 생성 (아이템보다 아래, 부모 없음)
+        // if (idleEffectPrefab != null)
+        // {
+        //     Vector3 offsetPosition = transform.position + new Vector3(0f, -0.8f, 0f);
+        //     idleEffectInstance = Instantiate(idleEffectPrefab, offsetPosition, Quaternion.identity);
+        // }
+
+        
     }
+
+
+
 
     void OnTriggerEnter(Collider other)
     {
@@ -50,21 +55,34 @@ public class HealItem : MonoBehaviour
         {
             Debug.Log($"체력 {healAmount} 회복!");
 
-            // 파괴 이펙트 재생
-            if (breakEffectPrefab != null)
-            {
-                GameObject effect = Instantiate(breakEffectPrefab, transform.position, Quaternion.identity);
 
-                // 수동 재생 (Play On Awake가 꺼져 있는 경우 대비)
-                ParticleSystem ps = effect.GetComponent<ParticleSystem>() ?? effect.GetComponentInChildren<ParticleSystem>();
-                if (ps != null) ps.Play();
-            }
+            GetItemData data = new GetItemData("Heal");
+            EventHub.Instance.Invoke<EventGetItem>(data);
 
-            // 지속 이펙트 제거
-            if (idleEffectInstance != null)
-            {
-                Destroy(idleEffectInstance);
-            }
+
+
+
+
+
+
+
+
+
+            // // 파괴 이펙트 재생
+            // if (breakEffectPrefab != null)
+            // {
+            //     GameObject effect = Instantiate(breakEffectPrefab, transform.position, Quaternion.identity);
+
+            //     // 수동 재생 (Play On Awake가 꺼져 있는 경우 대비)
+            //     ParticleSystem ps = effect.GetComponent<ParticleSystem>() ?? effect.GetComponentInChildren<ParticleSystem>();
+            //     if (ps != null) ps.Play();
+            // }
+
+            // // 지속 이펙트 제거
+            // if (idleEffectInstance != null)
+            // {
+            //     Destroy(idleEffectInstance);
+            // }
 
             // 아이템 제거
             Destroy(gameObject);

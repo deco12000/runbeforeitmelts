@@ -46,12 +46,11 @@ public class StageControl : MonoBehaviour
         track = pb as Track;
         activeTracks.Add(track);
         currTrack = track;
-        currTrack.SpawnObstacles();
-        currTrack.SpawnItems();
         CheckCurrTrackInfo();
         //
         yield return YieldInstructionCache.WaitForSeconds(4f);
         SpawnRainLoop(cts.Token).Forget();
+        
     }
     void Update()
     {
@@ -223,6 +222,7 @@ public class StageControl : MonoBehaviour
             if(hit.collider.gameObject.layer != 3) continue;
             await UniTask.DelayFrame(1, cancellationToken: token);
             var rain = PoolManager.Instance.Spawn(pb,pos,Quaternion.identity,currTrack.transform);
+            rain.transform.localScale = Random.Range(0.4f,1f) * Vector3.one;
             rains.Add(rain.transform);
         }
     }

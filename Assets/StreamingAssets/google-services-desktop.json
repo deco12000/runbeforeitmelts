@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "801517659479",
+    "project_id": "runbeforeitmelts",
+    "storage_bucket": "runbeforeitmelts.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:801517659479:android:5a57bf0465db6e313f4a12",
+        "android_client_info": {
+          "package_name": "com.team2.runbeforeitmelts"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9qj4gc6oVQNGHXGcvd9tzKZDV298gDn8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

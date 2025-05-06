@@ -42,6 +42,7 @@ public class AbilityGravity : MonoBehaviour, IAblity
     #endregion
     Rigidbody rb;
     Player player;
+    PlayerHealth playerHP;
     PlayerInput input;
     Transform camTr;
     bool isFall;
@@ -58,7 +59,16 @@ public class AbilityGravity : MonoBehaviour, IAblity
             if (player == null) player = Player.Instance;
             if (input == null) input = Player.Instance.input;
             if (camTr == null) camTr = Player.Instance.cam.cam.transform;
+            if ( playerHP == null) playerHP = Player.Instance.ctrl.GetComponent<PlayerHealth>();
             await UniTask.DelayFrame(1, cancellationToken: token);
+            if(playerHP.isDead)
+            {
+                if(!player.ctrl.anim.GetCurrentAnimatorStateInfo(0).IsName("Die"))
+                {
+                    player.ctrl.anim.SetTrigger("Die");
+                    player.ctrl.anim.Play("Die");
+                }
+            }
             if (IsGround())
             {
                 if (player.state == "Fall" && Time.time - startTime > 0.065f)

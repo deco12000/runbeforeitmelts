@@ -3822,6 +3822,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1822277413}
   - component: {fileID: 1822277414}
+  - component: {fileID: 1822277415}
   m_Layer: 0
   m_Name: SettingUI
   m_TagString: Untagged
@@ -3864,6 +3865,30 @@ MonoBehaviour:
   hideEase: 19
   sliderVolumeBGM: {fileID: 854900753}
   sliderVolumeSFX: {fileID: 1098414484}
+--- !u!114 &1822277415
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1822277412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9cd2219a9c94b94994694ccedeb79df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dbUrl: https://runbeforeitmelts-default-rtdb.firebaseio.com/
+  top3Users:
+  - Name: 
+    score: 0
+  - Name: 
+    score: 0
+  - Name: 
+    score: 0
+  highScores:
+  - {fileID: 970961784}
+  - {fileID: 245316684}
+  - {fileID: 186331137}
 --- !u!1 &1845094053
 GameObject:
   m_ObjectHideFlags: 0
@@ -4648,6 +4673,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 866103484}
+  firebaseDB: {fileID: 1822277415}
 --- !u!1 &2052127355
 GameObject:
   m_ObjectHideFlags: 0

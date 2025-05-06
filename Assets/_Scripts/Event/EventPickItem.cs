@@ -6,5 +6,9 @@ public class EventGetItem : Event
 }
 public class GetItemData : EventData
 {
-    public Transform owner;
+    public string Name;
+    public GetItemData(string Name)
+    {
+        this.Name = Name;
+    }
 }

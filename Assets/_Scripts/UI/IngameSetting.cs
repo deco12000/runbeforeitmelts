@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
+using System.Collections;
 public class InGameSetting : MonoBehaviour
 {
     [Header("설정 패널")]
@@ -20,6 +21,10 @@ public class InGameSetting : MonoBehaviour
 
     private bool isSettingsVisible = false;
     private bool isRankingVisible = false;
+
+    [Header("랭킹등록, 상위 3명불러오기")]
+    [SerializeField] FirebaseDB firebaseDB;
+
 
     void Start()
     {
@@ -66,6 +71,7 @@ public class InGameSetting : MonoBehaviour
 
     public void ToggleRanking()
     {
+        LoadHighScoreUsers();
         if (!isRankingVisible)
         {
             rankingPanel.SetActive(true);
@@ -105,6 +111,35 @@ public class InGameSetting : MonoBehaviour
 #endif
         });
         settingsPanel.SetActive(false);
+    }
+
+
+    public void EndInputField(string str)
+    {
+        float score = ((float)((int)(GameManager.Instance.distance + GameManager.Instance.trackDistance)))/10f;
+        firebaseDB.Submit(new UserData(str, score));
+        Debug.Log($"{str} , {score}");
+        LoadHighScoreUsers();
+    }
+
+    public void LoadHighScoreUsers()
+    {
+        StartCoroutine(firebaseDB.LoadHighScoreUsers());
+        
+    }
+
+    public void QuitGame()
+    {
+        SoundManager.Instance.PlaySFX("UIClickCrispy1");
+
+        Debug.Log("게임 종료 버튼 클릭됨");
+#if UNITY_EDITOR
+        // 에디터에서 실행 중일 경우
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        // 빌드된 게임에서 실행 중일 경우
+        Application.Quit();
+#endif
     }
 
 
