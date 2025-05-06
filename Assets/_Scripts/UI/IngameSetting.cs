@@ -6,6 +6,7 @@ public class InGameSetting : MonoBehaviour
     [Header("설정 패널")]
     public GameObject settingsPanel;
     public GameObject rankingPanel;
+    public GameObject gameOverPanel;
 
     private RectTransform settingsTransform;
     private RectTransform rankingTransform;
@@ -30,10 +31,13 @@ public class InGameSetting : MonoBehaviour
 
         settingsPanel.SetActive(false);
         rankingPanel.SetActive(false);
+
+        EventHub.Instance.Register<EventDie>(OpenGameOver);
     }
 
     public void ToggleSettings()
     {
+        if(gameOver) return;
         if (!isSettingsVisible)
         {
             settingsPanel.SetActive(true);
@@ -86,4 +90,19 @@ public class InGameSetting : MonoBehaviour
         Destroy(Player.Instance.transform.root.gameObject);
         SceneManager.LoadScene(1);
     }
+
+
+    bool gameOver = false;
+    void OpenGameOver(EventData ed)
+    {
+        gameOver = true;
+        DOVirtual.DelayedCall(4f,() => gameOverPanel.SetActive(true));
+        settingsPanel.SetActive(false);
+    }
+
+
+
+
+
+
 }

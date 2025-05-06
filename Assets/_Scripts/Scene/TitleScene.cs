@@ -1,8 +1,8 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 public class TitleScene : MonoBehaviour
 {
+    [SerializeField] GameObject canvas;
     IEnumerator Start()
     {
         GameManager.Instance.FadeIn();
@@ -19,6 +19,10 @@ public class TitleScene : MonoBehaviour
         SoundManager.Instance.PlaySFX("UIClickBubble1");
         yield return YieldInstructionCache.WaitForSeconds(0.8f);
         GameManager.Instance.LoadSceneAsync(2);
+        yield return YieldInstructionCache.WaitForSeconds(0.2f);
+        canvas.gameObject.SetActive(false);
+        
+
     }
 
 

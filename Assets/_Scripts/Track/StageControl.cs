@@ -144,13 +144,6 @@ public class StageControl : MonoBehaviour
         {
             track.transform.position += GameManager.Instance.scrollSpeed * Time.deltaTime * dir.normalized;
         }
-        // foreach(var rain in rains)
-        // {
-        //     rain.transform.position += GameManager.Instance.scrollSpeed * Time.deltaTime * dir.normalized;
-        // }
-
-
-
         if(count < selectPath.y)
         {
             count = selectPath.y;
@@ -218,7 +211,7 @@ public class StageControl : MonoBehaviour
             await UniTask.DelayFrame(20, cancellationToken: token);
             Vector3 vector = Random.Range(5f,30f) * Random.insideUnitSphere;
             vector.y = 0f;
-            Vector3 pos = camTr.position + 30f * camTr.forward + vector + Random.Range(10f,40f) * Vector3.up;
+            Vector3 pos = camTr.position + 30f * camTr.forward + vector + Random.Range(15f,40f) * Vector3.up;
             Ray ray = new Ray();
             ray.direction = Vector3.down;
             ray.origin = pos;
@@ -226,27 +219,11 @@ public class StageControl : MonoBehaviour
             Physics.Raycast(ray,out hit,200f);
             if(hit.collider == null) continue;
             if(hit.collider.gameObject.layer != 3) continue;
-            var rain = PoolManager.Instance.Spawn(pb,pos,Quaternion.identity);
+            var rain = PoolManager.Instance.Spawn(pb,pos,Quaternion.identity,currTrack.transform);
             rains.Add(rain.transform);
         }
     }
     List<Transform> rains = new List<Transform>();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     // 이 밑으로는 HDRI 관련
     [SerializeField] Renderer[] spheres;

@@ -26,13 +26,15 @@ public class PlayerHealth : MonoBehaviour
         currHP = Mathf.Clamp(currHP,0f,100f);
         // 플레이어가 공격에 맞았을때 아랫줄에 작성
 
-
-        
         if(currHP <= 0f && !isDead)
         {
             //플레이어가 죽었을때 아랫줄에 작성
             isDead = true;
             EventHub.Instance.Invoke<EventDie>(new DieData(transform));
+            Player.Instance.ctrl.DisableAblity<AbilityJump>("Die");
+            Player.Instance.ctrl.DisableAblity<AbilityMove>("Die");
+            Player.Instance.ctrl.anim.SetTrigger("Die");
+            EventHub.Instance.Invoke<EventScrollPause>();
 
 
 
