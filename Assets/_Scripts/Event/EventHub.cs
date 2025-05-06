@@ -19,7 +19,7 @@ public class EventHub : SingletonBehaviour<EventHub>
         for(int i=0; i<viewOnly.Count; i++)
             dictionary.Add(viewOnly[i].GetType().ToString(), viewOnly[i]);
     }
-    public void Register<T>(UnityAction<EventData> method) where T : Event 
+    public void Register<T>(UnityAction<EventData> method) where T : Event
     {
         if(dictionary.ContainsKey(typeof(T).Name))
             dictionary[typeof(T).Name].action += method;

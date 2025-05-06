@@ -10,11 +10,11 @@ EditorBuildSettings:
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
     path: Assets/_Scenes/1.TitleScene.unity
-    guid: b323f201543ceda47be69a8d3a0a5ecf
+    guid: 9548e82521f7dd94fb79ee273d3604e3
   - enabled: 1
     path: Assets/_Scenes/2.SelectScene.unity
-    guid: c7fcf3ff543bada4193f580340fb00ab
+    guid: e90a9cba0a1290c44991e64d331d4f29
   - enabled: 1
     path: Assets/_Scenes/3.InGameScene.unity
-    guid: 2506be640cbe6634bb6db594720522a5
+    guid: f4e531c123629a5418ea064abe64379a
   m_configObjects: {}

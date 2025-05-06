@@ -2,14 +2,15 @@ using UnityEngine;
 public class Player : SingletonBehaviour<Player>
 {
     protected override bool IsDontDestroy() => true;
-    [ReadOnlyInspector] public PlayerControl pctrl;
-    [ReadOnlyInspector] public PlayerInput pinput;
-    [ReadOnlyInspector] public PlayerCamera pcam;
-    [ReadOnlyInspector] public PlayerUI pui;
-    [ReadOnlyInspector] public State state = State.Idle;
+    [ReadOnlyInspector] public PlayerControl ctrl;
+    [ReadOnlyInspector] public PlayerInput input;
+    [ReadOnlyInspector] public PlayerCamera cam;
+    [ReadOnlyInspector] public PlayerUI ui;
+    [ReadOnlyInspector] public string state = "Idle";
+    [ReadOnlyInspector] public string prevState = "Idle";
     protected virtual void Awake()
     {
+        base.Awake();
         DontDestroyOnLoad(transform.parent);
     }
-    public enum State {Idle,Move,Jump,Hit,Die}
 }

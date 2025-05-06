@@ -3,13 +3,12 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 public class SFX : PoolBehaviour
 {
-    #region UniTask
+    #region UniTask Setting
     CancellationTokenSource cts;
     void OnEnable()
     {
         cts = new CancellationTokenSource();
         Application.quitting += () => UniTaskCancel();
-        //Init();
     }
     void OnDisable() { UniTaskCancel(); }
     void OnDestroy() { UniTaskCancel(); }
@@ -22,30 +21,30 @@ public class SFX : PoolBehaviour
         }
         catch (System.Exception e)
         {
-            
+
             Debug.Log(e);
         }
         cts = null;
     }
     #endregion
-    public AudioClip clip;
-    public bool loop;
-    public float length = -1;
-    public float fadeInTime = 0.1f;
-    public float fadeOutTime = 0.1f;
-    AudioSource aus;
-    float _len;
 
+    [SerializeField] AudioSource aus;
 
-
-
-
-
-
-
-
-
-
-
-    
+    public void PlayDespawn(AudioClip clip, float vol, float time)
+    {
+        PlayDespawn_ut(clip, vol, time, cts.Token).Forget();
+    }
+    async UniTask PlayDespawn_ut(AudioClip clip, float vol, float time, CancellationToken token)
+    {
+        await UniTask.Delay(2, ignoreTimeScale: true, cancellationToken:token);
+        aus.loop = false;
+        aus.clip = clip;
+        aus.volume = vol;
+        if (!gameObject.activeInHierarchy) gameObject.SetActive(true);
+        if (!aus.enabled) aus.enabled = true;
+        await UniTask.Delay(2, ignoreTimeScale: true, cancellationToken:token);
+        aus.Play();
+        await UniTask.Delay((int)(1000f * (time + 0.2f)),ignoreTimeScale: true , cancellationToken:token);
+        base.DeSpawn();
+    }
 }

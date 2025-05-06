@@ -1,8 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
-
-public class IngameSetting : MonoBehaviour
+public class InGameSetting : MonoBehaviour
 {
     [Header("설정 패널")]
     public GameObject settingsPanel;
@@ -81,15 +80,10 @@ public class IngameSetting : MonoBehaviour
         isRankingVisible = !isRankingVisible;
     }
 
-    public void RestartGame()
-    {
-        Time.timeScale = 1f; // 퍼즈 해제
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); // 현재 씬 다시 로드
-    }
-
     public void ReturnToMainMenu()
     {
         Time.timeScale = 1f; // 퍼즈 해제
-        SceneManager.LoadScene("1.TitleScene"); // "MainMenu" 씬 이름에 맞게 변경 가능
+        Destroy(Player.Instance.transform.root.gameObject);
+        SceneManager.LoadScene(1);
     }
 }

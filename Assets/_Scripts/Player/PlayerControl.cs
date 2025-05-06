@@ -1,21 +1,20 @@
 using System.Collections.Generic;
 using System.Linq;
-using Deform;
 using UnityEngine;
-
 public class PlayerControl : Player
 {
-
-    [HideInInspector] public Animator ainm;
+    [ReadOnlyInspector] public bool isGround = true;
+    [ReadOnlyInspector] public float lastMoveSpeed;
+    [HideInInspector] public Animator anim;
     List<IAblity> ablities;
-    [SerializeField] List<AblityDisable> ablityDisables = new List<AblityDisable>();
-    [SerializeField] List<AblityMultiply> ablityMultiplies = new List<AblityMultiply>();
+    [SerializeField] List<DisableAblity> ablityDisables = new List<DisableAblity>();
+    [SerializeField] List<MultiplyAblity> ablityMultiplies = new List<MultiplyAblity>();
     protected override void Awake()
     {
         base.Awake();
-        pctrl = this;
+        ctrl = this;
         InitAblity();
-        modelChanger = GetComponentInChildren<PlayerModelChanger>();
+        modelChanger = GetComponentInChildren<PlayerModelChange>();
     }
 
     void InitAblity()
@@ -30,7 +29,7 @@ public class PlayerControl : Player
         EventHub.Instance.Register<EventDisablePlayer>(OnDisablePlayer);
         EventHub.Instance.Register<EventEnablePlayer>(OnEnablePlayer);
     }
-    [HideInInspector] public PlayerModelChanger modelChanger;
+    [HideInInspector] public PlayerModelChange modelChanger;
 
     public void DisableAblity<T>(string reason) where T : IAblity
     {
@@ -44,7 +43,7 @@ public class PlayerControl : Player
             }
         if(find != -1) return;
 
-        AblityDisable disable = new AblityDisable(TName, reason);
+        DisableAblity disable = new DisableAblity(TName, reason);
         ablityDisables.Add(disable);
         for(int i=0; i<ablities.Count; i++)
             if(ablities[i].GetType().Name == TName)
@@ -66,21 +65,29 @@ public class PlayerControl : Player
             }
         if(find == -1) return;
         ablityDisables.RemoveAt(find);
-        if(ablityDisables.Count == 0)
-            ablities[find].enabled = true;
+        if(!ablityDisables.Any(x => x.targetAbilityName == TName))
+        {
+            for(int i=0; i<ablities.Count; i++)
+            if(ablities[i].GetType().Name == TName)
+            {
+                ablities[i].enabled = true;
+                break;
+            }
+        }
+
     }
 
 
     void OnDisablePlayer(EventData data)
     {
         gameObject.SetActive(false);
-        pui.gameObject.SetActive(false);
+        ui.gameObject.SetActive(false);
     }
     
     void OnEnablePlayer(EventData data)
     {
         gameObject.SetActive(true);
-        pui.gameObject.SetActive(true);
+        ui.gameObject.SetActive(true);
     }
 
 

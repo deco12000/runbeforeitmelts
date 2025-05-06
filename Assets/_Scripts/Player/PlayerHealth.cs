@@ -6,6 +6,8 @@ public class PlayerHealth : MonoBehaviour
     public bool isDead = false;
     public float maxHP = 100;
     public float currHP = 100;
+    public float maxSP = 100;
+    public float currSP = 100;
 
     void Start()
     {

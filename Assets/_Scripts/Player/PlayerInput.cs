@@ -9,7 +9,6 @@ using System.Linq;
 public enum PlatformType { None, Desktop_WebGL, Mobile_WebGL, Windows, Mac, Android, Ios }
 public enum ControlType { Touch, }
 public enum LanguageType { English, Korean, Russian, Chinese, Japaness, Spanish, Arabic, Hindi }
-
 public class PlayerInput : MonoBehaviour
 {
     #region UniTask Setting
@@ -35,14 +34,16 @@ public class PlayerInput : MonoBehaviour
         cts = null;
     }
     #endregion
-    
+
+    public bool isTestPlay;
+
     public PlatformType currPlatformType = PlatformType.Android;
     public ControlType currControlType = ControlType.Touch;
     public LanguageType currLanguageType = LanguageType.Korean;
 
     void Awake()
     {
-        Player.Instance.pinput = this;
+        Player.Instance.input = this;
     }
 
     void Start()
@@ -83,44 +84,61 @@ public class PlayerInput : MonoBehaviour
             eventData.position = Input.mousePosition;
             EventSystem.current.RaycastAll(eventData, cursorObjectsUI);
             cursorRay = cam.ScreenPointToRay(Input.mousePosition);
-            _hitsW = Physics.RaycastAll(cursorRay,2000f);
+            _hitsW = Physics.RaycastAll(cursorRay, 2000f);
             cursorObjectsWorld = _hitsW.ToList().OrderBy(x => x.distance).ToList();
 #if UNITY_EDITOR
             viewOnly.Clear();
-            for(int i=0; i<cursorObjectsUI.Count; i++)
+            for (int i = 0; i < cursorObjectsUI.Count; i++)
                 viewOnly.Add(cursorObjectsUI[i].gameObject);
-            for(int i=0; i<cursorObjectsWorld.Count; i++)
+            for (int i = 0; i < cursorObjectsWorld.Count; i++)
                 viewOnly.Add(cursorObjectsWorld[i].collider.gameObject);
 #endif
         }
     }
 
 
-    public Vector2 direction;
-    public Vector2 jumpDirection;
-    public bool isJump;
+
+
+    ////////////////////
     bool _mouse0;
-    public bool mouse0;
-    public UnityAction<GameObject> OnMouseDown0 = (x) => {};
-    public UnityAction OnMouseUp0 = () => {};
+    public bool isMouse0;
+    public UnityAction<GameObject> OnMouseDown0 = (target) => { };
+    public UnityAction OnMouseUp0 = () => { };
+    ////////////////////
+    public Vector2 moveDirection;
+    ////////////////////
+    public bool isJump;
+    public UnityAction OnJumpDown = () => { };
+    public UnityAction<Vector2, float> OnJumpUp = (dir, time) => { };
+    public UnityAction<Vector2, float> OnJumpAutoRelease = (dir, time) => { };
+    [HideInInspector] public Vector2 jumpDirection;
+    bool _jump;
+    float _startTime;
+    Vector2 _jumpDirection;
+    float horz;
+    float vert;
+    ////////////////////
+    public bool isSprint;
+    ////////////////////
+    public UnityAction OnSkillBtnDown = () => { };
+
     async UniTask CheckInput(CancellationToken token)
     {
         while (!token.IsCancellationRequested)
         {
             await UniTask.DelayFrame(1, cancellationToken: token);
-
-            if(Input.GetMouseButton(0))
+            if (Input.GetMouseButton(0))
             {
-                if(!_mouse0)
+                if (!_mouse0)
                 {
                     _mouse0 = true;
                     await UniTask.DelayFrame(1, cancellationToken: token);
                     GameObject go;
-                    if(cursorObjectsUI.Count != 0)
+                    if (cursorObjectsUI.Count != 0)
                     {
                         go = cursorObjectsUI[0].gameObject;
                     }
-                    else if(cursorObjectsWorld.Count != 0)
+                    else if (cursorObjectsWorld.Count != 0)
                     {
                         go = cursorObjectsWorld[0].collider.gameObject;
                     }
@@ -133,14 +151,23 @@ public class PlayerInput : MonoBehaviour
             }
             else
             {
-                if(_mouse0)
+                if (_mouse0)
                 {
                     _mouse0 = false;
                     OnMouseUp0.Invoke();
                 }
             }
+#if UNITY_EDITOR
+            if(isTestPlay)
+            {
+                horz = Input.GetAxisRaw("Horizontal");
+                vert = Input.GetAxisRaw("Vertical");
+                moveDirection = new Vector2(horz, vert);
+            }
+#endif
         }
     }
+
 
 
 

@@ -10,12 +10,8 @@ public class AbilityMove : MonoBehaviour, IAblity
         set => this.enabled = value;
     }
     float multiplier;
-    void IAblity.MultiplierUpdate(float total)
-    {
-        multiplier = total;
-    }
+    void IAblity.MultiplierUpdate(float total) => multiplier = total;
     #endregion
-
     #region UniTask Setting
     CancellationTokenSource cts;
     void OnEnable()
@@ -24,7 +20,7 @@ public class AbilityMove : MonoBehaviour, IAblity
         Application.quitting += () => UniTaskCancel();
         // ↓ Init ↓
         TryGetComponent(out rb);
-        input = Player.Instance.pinput;
+        input = Player.Instance.input;
         cam = Camera.main;
         Move(cts.Token).Forget();
     }
@@ -57,10 +53,11 @@ public class AbilityMove : MonoBehaviour, IAblity
     float speed = 0f;
     async UniTask Move(CancellationToken token)
     {
+        await UniTask.DelayFrame(10, cancellationToken: token);
         while (!token.IsCancellationRequested)
         {
             await UniTask.DelayFrame(1, cancellationToken: token);
-            if (input == null) input = Player.Instance.pinput;
+            if (input == null) input = Player.Instance.input;
             if (cam == null) cam = Camera.main;
             if(anim == null) anim = GetComponentInChildren<Animator>();
             if (input == null || cam == null || !cam.enabled || !cam.gameObject.activeInHierarchy)
@@ -68,18 +65,26 @@ public class AbilityMove : MonoBehaviour, IAblity
                 await UniTask.DelayFrame(50, cancellationToken: token);
                 continue;
             }
-            if(input.direction == Vector2.zero)
+            if(input.moveDirection == Vector2.zero)
             {
                 speed = Mathf.Lerp(speed, 0f, 10f * Time.deltaTime);
                 if(anim != null) anim.SetFloat("Move", speed);
-                if(Player.Instance.state == Player.State.Move)
+                if(Player.Instance.state == "Move")
                 {
-                    Player.Instance.state = Player.State.Idle;
-                    
+                    Player.Instance.prevState = "Move";
+                    Player.Instance.state = "Idle";
                 }
                 continue;
             }
-            Player.Instance.state = Player.State.Move;
+            if(Player.Instance.state != "Move")
+            {
+                Player.Instance.prevState = Player.Instance.state;
+                Player.Instance.state = "Move";
+            }
+            if(anim.GetCurrentAnimatorStateInfo(0).IsName("Fall"))
+            {
+                anim.Play("Move");
+            }
             camForwardXZ = cam.transform.forward;
             camForwardXZ.y = 0;
             camRightXZ = cam.transform.right;
@@ -94,11 +99,12 @@ public class AbilityMove : MonoBehaviour, IAblity
             }
             camForwardXZ.Normalize();
             camRightXZ.Normalize();
-            moveDir = input.direction.x * camRightXZ + input.direction.y * camForwardXZ;
+            moveDir = input.moveDirection.x * camRightXZ + input.moveDirection.y * camForwardXZ;
             MoveDirection();
             speed = moveSpeed * angleSlow;
             anim.SetFloat("Move", speed);
             rb.MovePosition(transform.position += speed * moveDir * Time.deltaTime);
+            Player.Instance.ctrl.lastMoveSpeed = moveSpeed;
         }
     }
     void MoveDirection()

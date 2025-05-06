@@ -5,7 +5,6 @@ TagManager:
   serializedVersion: 2
   tags:
   - Obstacle
-  - Item
   layers:
   - Default
   - TransparentFX
@@ -13,7 +12,7 @@ TagManager:
   - Ground
   - Water
   - UI
-  - Outline
+  - Entity
   - 
   - 
   - 
