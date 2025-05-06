@@ -37,7 +37,7 @@ public class InGameSetting : MonoBehaviour
 
     public void ToggleSettings()
     {
-        if(gameOver) return;
+        if (gameOver) return;
         if (!isSettingsVisible)
         {
             settingsPanel.SetActive(true);
@@ -91,12 +91,19 @@ public class InGameSetting : MonoBehaviour
         SceneManager.LoadScene(1);
     }
 
-
     bool gameOver = false;
     void OpenGameOver(EventData ed)
     {
         gameOver = true;
-        DOVirtual.DelayedCall(4f,() => gameOverPanel.SetActive(true));
+        DOVirtual.DelayedCall(4f, () =>
+        {
+            gameOverPanel.SetActive(true);
+#if UNITY_ANDROID
+            Handheld.Vibrate();
+#elif UNITY_IOS
+            Handheld.Vibrate();
+#endif
+        });
         settingsPanel.SetActive(false);
     }
 

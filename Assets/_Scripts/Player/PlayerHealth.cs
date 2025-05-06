@@ -20,13 +20,19 @@ public class PlayerHealth : MonoBehaviour
     void OnAttack(EventData ed)
     {
         AttackData hd = ed as AttackData;
-        if(hd == null) return;
-        if(hd.target != transform) return;
+        if (hd == null) return;
+        if (hd.target != transform) return;
         currHP -= hd.damage;
-        currHP = Mathf.Clamp(currHP,0f,100f);
+        currHP = Mathf.Clamp(currHP, 0f, 100f);
         // 플레이어가 공격에 맞았을때 아랫줄에 작성
 
-        if(currHP <= 0f && !isDead)
+#if UNITY_ANDROID
+        Handheld.Vibrate();
+#elif UNITY_IOS
+        Handheld.Vibrate();
+#endif
+
+        if (currHP <= 0f && !isDead)
         {
             //플레이어가 죽었을때 아랫줄에 작성
             isDead = true;
@@ -35,6 +41,11 @@ public class PlayerHealth : MonoBehaviour
             Player.Instance.ctrl.DisableAblity<AbilityMove>("Die");
             Player.Instance.ctrl.anim.SetTrigger("Die");
             EventHub.Instance.Invoke<EventScrollPause>();
+#if UNITY_ANDROID
+            Handheld.Vibrate();
+#elif UNITY_IOS
+    Handheld.Vibrate();
+#endif
 
 
 

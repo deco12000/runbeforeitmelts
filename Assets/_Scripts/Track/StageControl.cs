@@ -208,7 +208,8 @@ public class StageControl : MonoBehaviour
         PoolBehaviour pb = obstacleRainDrop.GetComponent<PoolBehaviour>();
         while(!token.IsCancellationRequested)
         {
-            await UniTask.DelayFrame(20, cancellationToken: token);
+            await UniTask.DelayFrame(17, cancellationToken: token);
+            if(isPause) continue;
             Vector3 vector = Random.Range(5f,30f) * Random.insideUnitSphere;
             vector.y = 0f;
             Vector3 pos = camTr.position + 30f * camTr.forward + vector + Random.Range(15f,40f) * Vector3.up;
@@ -216,9 +217,11 @@ public class StageControl : MonoBehaviour
             ray.direction = Vector3.down;
             ray.origin = pos;
             RaycastHit hit;
-            Physics.Raycast(ray,out hit,200f);
+            Physics.Raycast(ray,out hit,50f);
             if(hit.collider == null) continue;
+            if(hit.distance < 10f) continue;
             if(hit.collider.gameObject.layer != 3) continue;
+            await UniTask.DelayFrame(1, cancellationToken: token);
             var rain = PoolManager.Instance.Spawn(pb,pos,Quaternion.identity,currTrack.transform);
             rains.Add(rain.transform);
         }

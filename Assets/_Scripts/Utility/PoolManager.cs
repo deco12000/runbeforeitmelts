@@ -60,6 +60,7 @@ public class PoolManager : SingletonBehaviour<PoolManager>
         clone.transform.SetPositionAndRotation(pos,rot);
         if(parent == null) clone.transform.SetParent(transform);
         else clone.transform.SetParent(parent);
+        clone.transform.position = pos;
         instances.Add(clone, pool);
         return clone;
     }
