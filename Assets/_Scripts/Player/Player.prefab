@@ -142,7 +142,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 864e798ac27e5284e9080c6346d3db2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  airControlSpeed: 1.5
+  airControlSpeed: 2
   airControlRotate: 0.55
 --- !u!114 &5733114762152164764
 MonoBehaviour:
@@ -156,7 +156,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f16012e3a92072e4b894f05442fafdd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 7
+  moveSpeed: 6
 --- !u!114 &993273967713829300
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -169,7 +169,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46d15aec2891e9e4091ac99a30fefcab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpForce: 38
+  jumpForce: 42
   jumpDuration: 0.25
   turnSpeed: 0.9
 --- !u!1 &2566743770984146287
