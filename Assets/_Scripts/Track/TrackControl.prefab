@@ -81,6 +81,7 @@ MonoBehaviour:
   - {fileID: 6813357430994016979, guid: 7eb62ce5de323d94896c7915ee2a3634, type: 3}
   - {fileID: 2516202394810298531, guid: 13eedcd3baa8ed44aa588cce37bc05e7, type: 3}
   - {fileID: 4365049550771031843, guid: d43056b9b80f759429e3cb8b7c68a9b6, type: 3}
+  - {fileID: 1768907892716706871, guid: bbcb0e5da208d88409f46025cbdf5c4e, type: 3}
   currTracks: []
   currTrack: {fileID: 0}
   prevTrack: {fileID: 0}

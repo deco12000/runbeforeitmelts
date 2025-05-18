@@ -180,6 +180,7 @@ public class AbilityJump : Ability
                                 if (Vector3.Angle(dir, jumpStartDirectionXZ) >= 90) { break; }
                                 Debug.DrawRay(transform.position - 0.02f * transform.forward, 6f * dir, Color.blue, 10f, false);
                                 test = true;
+                                dir += 0.3f * Vector3.up;
                                 break;
                             }
                         }

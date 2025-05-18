@@ -60,13 +60,13 @@ public class SphericalBGControl : MonoBehaviour
         Debug.Log(currTex);
         tween1.Kill();
         tween2.Kill();
-        tween1 = SphericalBGrndr.material.DOFloat(0f,"_Alpha",10f);
+        tween1 = SphericalBGrndr.material.DOFloat(0f,"_Alpha",15f);
         SphericalBG1.gameObject.SetActive(true);
         Vector3 pos = playerTr.position;
         pos.y = 35f;
         SphericalBG1.position = pos;
         SphericalBG1rndr.material.mainTexture = currTex;
-        tween2 = SphericalBG1rndr.material.DOFloat(1f,"_Alpha",10f);
+        tween2 = SphericalBG1rndr.material.DOFloat(1f,"_Alpha",15f);
         isChanging = true;
         tween1.OnComplete(() =>
         {

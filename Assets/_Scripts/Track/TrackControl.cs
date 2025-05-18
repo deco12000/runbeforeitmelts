@@ -42,6 +42,7 @@ public class TrackControl : MonoBehaviour
         pb = PoolManager.I.Spawn(tracks[1], Vector3.zero, Quaternion.identity, transform);
         currTracks.Add(pb as Track);
         currTrack = pb as Track;
+        currTrack.SpawnItem();
         waterSpawner.isInside = currTrack.isInside;
         GetAllCheckPoints();
         StartCoroutine(nameof(GetCurrentCheckPointLoop));
@@ -158,6 +159,7 @@ public class TrackControl : MonoBehaviour
                     }
                     //Debug.Log($"{track.name}vs{_prevTrackName},{currTrack.name} , {track.startFloor}vs{height} ");
                     PoolBehaviour pb = PoolManager.I.Spawn(track, Vector3.zero, Quaternion.identity, transform);
+                    ((Track)pb).SpawnItem();
                     currTracks.Add(pb as Track);
                     pb.transform.position = currTrack.endPoint[currCheckPoint.x].position;
                     pb.transform.rotation = currTrack.endPoint[currCheckPoint.x].rotation;

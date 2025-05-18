@@ -5,7 +5,7 @@ public class JumpItem : Item
     public bool _isUsed;
     protected override bool isUsed => _isUsed;
     public int _probablity = 7;
-    protected override int probablity => _probablity;
+    public override int probablity => _probablity;
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))

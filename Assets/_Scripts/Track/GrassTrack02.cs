@@ -1,12 +1,13 @@
 using UnityEngine;
-public class StreetTrack01 : Track
+public class GrassTrack02 : Track
 {
     #region Implement Setting
     [SerializeField] Transform[] _endPoint;
     public override Transform[] endPoint => _endPoint;
     [SerializeField] Animation[] _checkPoint;
     public override Animation[] checkPoint => _checkPoint;
-    public override SphericalBGControl.GroundType groundType => SphericalBGControl.GroundType.Asphalt;
+    public override void SpawnObstacle() { }
+    public override SphericalBGControl.GroundType groundType => SphericalBGControl.GroundType.Grass;
     public override int startFloor => 0;
     public override bool isInside => false;
     public Item[] _items;
@@ -15,11 +16,6 @@ public class StreetTrack01 : Track
     {
         base.SpawnItem();
     }
-    public override void SpawnObstacle()
-    {
-
-    }
     #endregion
 
-    
 }

@@ -1,5 +1,5 @@
 using UnityEngine;
-public class StreetTrack02 : Track
+public class DirtTrack01 : Track
 {
     #region Implement Setting
     [SerializeField] Transform[] _endPoint;
@@ -7,7 +7,7 @@ public class StreetTrack02 : Track
     [SerializeField] Animation[] _checkPoint;
     public override Animation[] checkPoint => _checkPoint;
     public override void SpawnObstacle() { }
-    public override SphericalBGControl.GroundType groundType => SphericalBGControl.GroundType.Dirt;
+    public override SphericalBGControl.GroundType groundType => SphericalBGControl.GroundType.Grass;
     public override int startFloor => 0;
     public override bool isInside => false;
     public Item[] _items;

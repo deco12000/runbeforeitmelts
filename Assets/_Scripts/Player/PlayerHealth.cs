@@ -10,7 +10,7 @@ public class PlayerHealth : MonoBehaviour
         cts = new CancellationTokenSource();
         Application.quitting += UniTaskCancel;
     }
-    void OnDisable() { UniTaskCancel(); }
+    void OnDisable() { UniTaskCancel(); OnDisable_(); }
     void OnDestroy() { UniTaskCancel(); }
     void UniTaskCancel()
     {
@@ -41,6 +41,11 @@ public class PlayerHealth : MonoBehaviour
     {
         EventHub.I.Register<EventAttack>(OnAttack);
         EventHub.I.Register<EventGetItem>(OnGetItem);
+    }
+    void OnDisable_()
+    {
+        EventHub.I.UnRegister<EventAttack>(OnAttack);
+        EventHub.I.UnRegister<EventGetItem>(OnGetItem);
     }
     void OnGetItem(EventData ed)
     {

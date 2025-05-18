@@ -1944,8 +1944,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46d15aec2891e9e4091ac99a30fefcab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpForce: 15.2
-  jumpDuration: 0.68
+  jumpForce: 15.55
+  jumpDuration: 0.7
   maxInputHoldTime: 0.23
 --- !u!81 &6201290022921537138
 AudioListener:
