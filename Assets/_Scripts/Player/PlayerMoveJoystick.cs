@@ -48,6 +48,18 @@ public class PlayerMoveJoystick : MonoBehaviour, IPointerDownHandler, IPointerUp
 #endif
         transform.Find("Handle").TryGetComponent(out handle);
     }
+
+#if UNITY_EDITOR
+    void Update()
+    {
+        Vector2 keyboard = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")); ;
+        input.moveDirection = keyboard;
+        Vector2 norm = new Vector2(keyboard.x / (rt.sizeDelta.x * 0.5f), keyboard.y / (rt.sizeDelta.y * 0.5f)) * sensitivity;
+        norm = Vector2.ClampMagnitude(norm, 1f);
+        handle.anchoredPosition = Vector2.Lerp(handle.anchoredPosition, norm * 100f * handleRange, 4f * Time.deltaTime);
+    }
+#endif
+
     public void OnPointerDown(PointerEventData eventData)
     {
         ctsRelease?.Cancel();

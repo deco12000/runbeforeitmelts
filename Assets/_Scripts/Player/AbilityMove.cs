@@ -66,9 +66,12 @@ public class AbilityMove : Ability
             await UniTask.WaitForFixedUpdate(cancellationToken: token);
             if (!isInit) continue;
             if (Player.I.isDead) continue;
-#if UNITY_EDITOR
-            input.moveDirection = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-#endif
+            if (anim == null)
+            {
+                anim = Player.I.anim;
+                await UniTask.WaitForFixedUpdate(cancellationToken: token);
+                continue;
+            }
             if (input.moveDirection != Vector2.zero)
             {
                 camForwardXZ = camTr.forward;

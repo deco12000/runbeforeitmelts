@@ -75,79 +75,85 @@ public class AbilityGravity : Ability
         {
             await UniTask.WaitForFixedUpdate(cancellationToken: token);
             if (!isInit) continue;
-            if (!IsGround())
+            if (anim == null)
             {
-                gravitySpeed += gravityAcc * Time.fixedDeltaTime;
-                gravitySpeed = Mathf.Clamp(gravitySpeed, gravityMaxSpeed, 0f);
-                if (input.moveDirection != Vector2.zero)
-                {
-                    camForwardXZ = camTr.forward;
-                    camForwardXZ.y = 0;
-                    camRightXZ = camTr.right;
-                    camRightXZ.y = 0;
-                    if (camForwardXZ == Vector3.zero)
-                    {
-                        camForwardXZ = Quaternion.Euler(0f, -90f, 0f) * camRightXZ;
-                    }
-                    else if (camRightXZ == Vector3.zero)
-                    {
-                        camRightXZ = Quaternion.Euler(0f, 90f, 0f) * camForwardXZ;
-                    }
-                    camForwardXZ.Normalize();
-                    camRightXZ.Normalize();
-                    moveDir = input.moveDirection.x * camRightXZ + input.moveDirection.y * camForwardXZ;
-                    transform.forward = Vector3.Slerp(transform.forward, moveDir, rotateSpeedAir * Time.fixedDeltaTime);
-                }
-                else moveDir = Vector3.zero;
-                slowAngle = 1f - Vector3.Angle(transform.forward, moveDir) * 0.00277f;
-                //rb.MovePosition(transform.position + (moveSpeedAir * slowAngle * moveDir +  gravitySpeed * Vector3.up) * Time.fixedDeltaTime);
-                rb.linearVelocity = (moveSpeedAir * slowAngle * moveDir + gravitySpeed * Vector3.up);
-                if (player.state != "Fall" && player.state != "Land" && player.state != "Die")
-                {
-                    //Debug.Log($"{player.state}->Fall");
-                    anim.CrossFade("Fall", 0.15f);
-                    player.state = "Fall";
-                    player.DisableAbility<AbilityMove>("Fall");
-                    fallTime = Time.time;
-                }
+                anim = Player.I.anim;
+                await UniTask.WaitForFixedUpdate(cancellationToken: token);
+                continue;
             }
-            else
-            {
-                if (player.state == "Fall")
+            if (!IsGround())
                 {
-                    //Debug.Log(Time.time - test);
-                    //Debug.Log("Fall->Land");
-                    rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-                    anim.CrossFade("Land", 0.15f);
-                    player.state = "Land";
-                    ParticleManager.I.PlayParticle("LandDust", transform.position,Quaternion.identity);
-                    //rb.linearVelocity = 0.6f * rb.linearVelocity;
-                    startTimeLand = Time.time;
-                    fallTime = Time.time - fallTime;
-                    if (fallTime > 0.2f)
+                    gravitySpeed += gravityAcc * Time.fixedDeltaTime;
+                    gravitySpeed = Mathf.Clamp(gravitySpeed, gravityMaxSpeed, 0f);
+                    if (input.moveDirection != Vector2.zero)
                     {
-                        SoundManager.I.PlaySFX("Land");
+                        camForwardXZ = camTr.forward;
+                        camForwardXZ.y = 0;
+                        camRightXZ = camTr.right;
+                        camRightXZ.y = 0;
+                        if (camForwardXZ == Vector3.zero)
+                        {
+                            camForwardXZ = Quaternion.Euler(0f, -90f, 0f) * camRightXZ;
+                        }
+                        else if (camRightXZ == Vector3.zero)
+                        {
+                            camRightXZ = Quaternion.Euler(0f, 90f, 0f) * camForwardXZ;
+                        }
+                        camForwardXZ.Normalize();
+                        camRightXZ.Normalize();
+                        moveDir = input.moveDirection.x * camRightXZ + input.moveDirection.y * camForwardXZ;
+                        transform.forward = Vector3.Slerp(transform.forward, moveDir, rotateSpeedAir * Time.fixedDeltaTime);
                     }
-                    if (fallTime < 0.2f) landTime = 0f;
+                    else moveDir = Vector3.zero;
+                    slowAngle = 1f - Vector3.Angle(transform.forward, moveDir) * 0.00277f;
+                    //rb.MovePosition(transform.position + (moveSpeedAir * slowAngle * moveDir +  gravitySpeed * Vector3.up) * Time.fixedDeltaTime);
+                    rb.linearVelocity = (moveSpeedAir * slowAngle * moveDir + gravitySpeed * Vector3.up);
+                    if (player.state != "Fall" && player.state != "Land" && player.state != "Die")
+                    {
+                        //Debug.Log($"{player.state}->Fall");
+                        anim.CrossFade("Fall", 0.15f);
+                        player.state = "Fall";
+                        player.DisableAbility<AbilityMove>("Fall");
+                        fallTime = Time.time;
+                    }
+                }
+                else
+                {
+                    if (player.state == "Fall")
+                    {
+                        //Debug.Log(Time.time - test);
+                        //Debug.Log("Fall->Land");
+                        rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+                        anim.CrossFade("Land", 0.15f);
+                        player.state = "Land";
+                        ParticleManager.I.PlayParticle("LandDust", transform.position, Quaternion.identity);
+                        //rb.linearVelocity = 0.6f * rb.linearVelocity;
+                        startTimeLand = Time.time;
+                        fallTime = Time.time - fallTime;
+                        if (fallTime > 0.2f)
+                        {
+                            SoundManager.I.PlaySFX("Land");
+                        }
+                        if (fallTime < 0.2f) landTime = 0f;
                         else if (fallTime < 1f) landTime = 0.2f + (fallTime * 0.1f);
                         else landTime = 0.4f;
-                }
-                if (player.state == "Land")
-                {
-                    //fallTime시간이 클수록 Land시간이 길어지게 처리
-                    //Debug.Log(Time.time - startTimeLand);
-                    if (Time.time - startTimeLand > landTime)
-                    {
-                        //Debug.Log($"{player.state}->Idle");
-                        anim.CrossFade("Idle", 0.3f);
-                        player.state = "Idle";
-                        player.EnableAbility<AbilityMove>("Fall");
-                        //player.EnableAbility<AbilityJump>("Fall");
-                        rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
                     }
+                    if (player.state == "Land")
+                    {
+                        //fallTime시간이 클수록 Land시간이 길어지게 처리
+                        //Debug.Log(Time.time - startTimeLand);
+                        if (Time.time - startTimeLand > landTime)
+                        {
+                            //Debug.Log($"{player.state}->Idle");
+                            anim.CrossFade("Idle", 0.3f);
+                            player.state = "Idle";
+                            player.EnableAbility<AbilityMove>("Fall");
+                            //player.EnableAbility<AbilityJump>("Fall");
+                            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+                        }
+                    }
+                    if (gravitySpeed != 0) gravitySpeed = 0f;
                 }
-                if (gravitySpeed != 0) gravitySpeed = 0f;
-            }
             if (player.isDead) continue;
         }
     }

@@ -110,7 +110,6 @@ public class WaterSpawner : MonoBehaviour
             if (isInside) yield return YieldInstructionCache.WaitForSeconds(1f);
             if (isInside) yield return YieldInstructionCache.WaitForSeconds(1f);
             if (isInside) yield return YieldInstructionCache.WaitForSeconds(1f);
-            if (isInside) yield return YieldInstructionCache.WaitForSeconds(1f);
             if (Player.I.isDead) yield return YieldInstructionCache.WaitForSeconds(6f);
         }
     }

@@ -36,9 +36,10 @@ public class Player : SingletonBehaviour<Player>
     public float size = 1f;
     public bool tempInvincible;
     public Transform camTr;
+    public Animator anim;
     public void ChangeModel(int index)
     {
-        
+
     }
     public void DisableAbility<T>(string reason) where T : Ability
     {

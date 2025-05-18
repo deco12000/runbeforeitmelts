@@ -20,9 +20,9 @@ public class AbilityJump : Ability
         cts = new CancellationTokenSource();
         Application.quitting += UniTaskCancel;
         ///////////////
-        OnEnable2();
+        Init();
     }
-    void OnDisable() { UniTaskCancel(); OnDisable2(); }
+    void OnDisable() { UniTaskCancel(); UnInit(); }
     void OnDestroy() { UniTaskCancel(); }
     void UniTaskCancel()
     {
@@ -58,19 +58,23 @@ public class AbilityJump : Ability
         TryGetComponent(out rb);
         TryGetComponent(out gravity);
     }
-    void OnEnable2()
+    void Init()
     {
         input.OnJumpDown += OnJumpDown;
         input.OnJumpUp += OnJumpUp;
         camTr = Player.I.camTr;
     }
-    void OnDisable2()
+    void UnInit()
     {
         input.OnJumpDown -= OnJumpDown;
         input.OnJumpUp -= OnJumpUp;
     }
     void OnJumpDown()
     {
+        if (anim == null)
+        {
+            anim = Player.I.anim;
+        }
         if (player.state == "JumpStart") return;
         if (player.state == "Fall") return;
         if (player.state == "Land") return;

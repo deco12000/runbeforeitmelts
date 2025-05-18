@@ -46,11 +46,16 @@ public class PlayerHealth : MonoBehaviour
     {
         if (Player.I.isDead) return;
         GetItemData d = ed as GetItemData;
-        if (d.Name == "Heal")
+        Debug.Log($"아이템 획득 : {d.Name}");
+        if (d.Name == "Heal1")
         {
             currHP += 25f;
             currHP = Mathf.Clamp(currHP, 0f, 100f);
-
+        }
+        else if (d.Name == "Heal2")
+        {
+            currHP += 100f;
+            currHP = Mathf.Clamp(currHP, 0f, 100f);
         }
     }
     void OnAttack(EventData _ed)

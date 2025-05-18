@@ -136,6 +136,8 @@ MonoBehaviour:
   - {fileID: 3342719283886983671, guid: 682a4ea2cf6844d4da31ce2c2bd099ee, type: 3}
   - {fileID: 6266093127380888232, guid: 8a7bb7bedf6915948bf20c729bfcfba0, type: 3}
   - {fileID: 4578793268914733453, guid: 7df489beccf468543ba64a622a58306c, type: 3}
+  - {fileID: 2519813747157384106, guid: e1065a9faf1e187448cc74438f558fb9, type: 3}
+  - {fileID: 8468484429193273097, guid: ac93eadee71de7e498824822ce53256b, type: 3}
   EffectSpriteList:
   - {fileID: 2385885388939939181, guid: f440da544204ccb4f960060e57bdeb2b, type: 3}
 --- !u!114 &1139962682154526826

@@ -58,4 +58,10 @@ public class ParticleManager : SingletonBehaviour<ParticleManager>
         _clone.Play(time);
         return _clone;
     }
+    public Transform PlayWorldText(string content, Vector3 pos, Vector3 scale, Color color, float time = 1f, Transform parent = null)
+    {
+        
+
+        return null;
+    }
 }

@@ -65,6 +65,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: f32b0f585442cbe40abb861891d52e32, type: 3}
   - {fileID: 8300000, guid: 51cee9e8ebb48414789369ec3549f8d8, type: 3}
   - {fileID: 8300000, guid: 75fce7c06924f114181112aee4386311, type: 3}
+  - {fileID: 8300000, guid: 3f1d9848db159324bb56d9d209108b81, type: 3}
+  - {fileID: 8300000, guid: 73fdbff5d7895734db2fc6fc1f0f6c85, type: 3}
+  - {fileID: 8300000, guid: ca0cd111da4096c488511b13537b6157, type: 3}
   ambienceList:
   - {fileID: 8300000, guid: f983988be128065448873fed4532e7b1, type: 3}
   sfxPrefab: {fileID: 6825123997177719663, guid: 3573164359e59e749971469f005bd620, type: 3}

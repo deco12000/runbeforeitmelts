@@ -9,9 +9,11 @@ public class StreetTrack01 : Track
     public override SphericalBGControl.GroundType groundType => SphericalBGControl.GroundType.Concrete;
     public override int startFloor => 0;
     public override bool isInside => false;
+    public Item[] _items;
+    public override Item[] items => _items;
     public override void SpawnItem()
     {
-
+        base.SpawnItem();
     }
     public override void SpawnObstacle()
     {

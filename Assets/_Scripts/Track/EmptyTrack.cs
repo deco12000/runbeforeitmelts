@@ -11,6 +11,7 @@ public class TrackEmpty : Track
     public override SphericalBGControl.GroundType groundType => SphericalBGControl.GroundType.Dirt;
     public override int startFloor => 0;
     public override bool isInside => false;
+    public override Item[] items => throw new System.NotImplementedException();
     #endregion
 
 
