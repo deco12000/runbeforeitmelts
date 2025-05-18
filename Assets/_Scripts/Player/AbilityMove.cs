@@ -1,28 +1,25 @@
 using System.Threading;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
-public class AbilityMove : MonoBehaviour, IAblity
+public class AbilityMove : Ability
 {
-    #region IAblity Implement
-    bool IAblity.enabled
+    #region Implement Setting
+    protected override bool Enabled
     {
         get => this.enabled;
         set => this.enabled = value;
     }
     float multiplier;
-    void IAblity.MultiplierUpdate(float total) => multiplier = total;
+    public override void UpdateMultiplier(float m) => multiplier = m;
     #endregion
     #region UniTask Setting
     CancellationTokenSource cts;
     void OnEnable()
     {
         cts = new CancellationTokenSource();
-        Application.quitting += () => UniTaskCancel();
-        // ↓ Init ↓
-        TryGetComponent(out rb);
-        input = Player.Instance.input;
-        cam = Camera.main;
-        Move(cts.Token).Forget();
+        Application.quitting += UniTaskCancel;
+        ///////////////
+        MoveLoop(cts.Token).Forget();
     }
     void OnDisable() { UniTaskCancel(); }
     void OnDestroy() { UniTaskCancel(); }
@@ -36,84 +33,82 @@ public class AbilityMove : MonoBehaviour, IAblity
         catch (System.Exception e)
         {
 
-            Debug.Log(e);
+            Debug.Log(e.Message);
         }
         cts = null;
     }
     #endregion
-    
+    Transform camTr;
     [SerializeField] float moveSpeed = 4f;
+    [SerializeField] float rotateSpeed = 4f;
+    bool isInit;
+    Player player;
     PlayerInput input;
+    Rigidbody rb;
     Animator anim;
-    Camera cam;
     Vector3 camForwardXZ;
     Vector3 camRightXZ;
     Vector3 moveDir;
-    Rigidbody rb;
-    float speed = 0f;
-    async UniTask Move(CancellationToken token)
+    float slowAngle = 1f;
+    void Start()
     {
-        await UniTask.DelayFrame(10, cancellationToken: token);
+        camTr = Player.I.camTr;
+        TryGetComponent(out rb);
+        TryGetComponent(out player);
+        player.TryGetComponent(out input);
+        anim = GetComponentInChildren<Animator>();
+        isInit = true;
+    }
+    async UniTask MoveLoop(CancellationToken token)
+    {
         while (!token.IsCancellationRequested)
         {
-            await UniTask.DelayFrame(1, cancellationToken: token);
-            if (input == null) input = Player.Instance.input;
-            if (cam == null) cam = Camera.main;
-            if(anim == null) anim = GetComponentInChildren<Animator>();
-            if (input == null || cam == null || !cam.enabled || !cam.gameObject.activeInHierarchy)
+            await UniTask.WaitForFixedUpdate(cancellationToken: token);
+            if (!isInit) continue;
+            if (Player.I.isDead) continue;
+#if UNITY_EDITOR
+            input.moveDirection = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+#endif
+            if (input.moveDirection != Vector2.zero)
             {
-                await UniTask.DelayFrame(50, cancellationToken: token);
-                continue;
-            }
-            if(input.moveDirection == Vector2.zero)
-            {
-                speed = Mathf.Lerp(speed, 0f, 10f * Time.deltaTime);
-                if(anim != null) anim.SetFloat("Move", speed);
-                if(Player.Instance.state == "Move")
+                camForwardXZ = camTr.forward;
+                camForwardXZ.y = 0;
+                camRightXZ = camTr.right;
+                camRightXZ.y = 0;
+                if (camForwardXZ == Vector3.zero)
                 {
-                    Player.Instance.prevState = "Move";
-                    Player.Instance.state = "Idle";
+                    camForwardXZ = Quaternion.Euler(0f, -90f, 0f) * camRightXZ;
                 }
-                continue;
+                else if (camRightXZ == Vector3.zero)
+                {
+                    camRightXZ = Quaternion.Euler(0f, 90f, 0f) * camForwardXZ;
+                }
+                camForwardXZ.Normalize();
+                camRightXZ.Normalize();
+                moveDir = input.moveDirection.x * camRightXZ + input.moveDirection.y * camForwardXZ;
+                transform.forward = Vector3.Slerp(transform.forward, moveDir, rotateSpeed * Time.fixedDeltaTime);
+                slowAngle = 1f - Vector3.Angle(transform.forward, moveDir) * 0.00277f;
+                //rb.MovePosition(transform.position += );
+                //rb.linearVelocity += moveSpeed * slowAngle * moveDir.normalized * Time.fixedDeltaTime;
+                rb.linearVelocity = moveSpeed * slowAngle * moveDir.normalized;
+                if (player.state != "Move")
+                {
+                    //Debug.Log($"{player.state}->Move");
+                    player.state = "Move";
+                    anim.CrossFade("Move", 0.1f);
+                    anim.SetFloat("Move", moveSpeed);
+                }
             }
-            if(Player.Instance.state != "Move")
+            else
             {
-                Player.Instance.prevState = Player.Instance.state;
-                Player.Instance.state = "Move";
+                if (player.state == "Move")
+                {
+                    //Debug.Log($"Move->Idle");
+                    player.state = "Idle";
+                    anim.CrossFade("Idle", 0.1f);
+                }
             }
-            if(anim.GetCurrentAnimatorStateInfo(0).IsName("Fall"))
-            {
-                anim.Play("Move");
-            }
-            camForwardXZ = cam.transform.forward;
-            camForwardXZ.y = 0;
-            camRightXZ = cam.transform.right;
-            camRightXZ.y = 0;
-            if (camForwardXZ == Vector3.zero)
-            {
-                camForwardXZ = Quaternion.Euler(0f, -90f, 0f) * camRightXZ;
-            }
-            else if (camRightXZ == Vector3.zero)
-            {
-                camRightXZ = Quaternion.Euler(0f, 90f, 0f) * camForwardXZ;
-            }
-            camForwardXZ.Normalize();
-            camRightXZ.Normalize();
-            moveDir = input.moveDirection.x * camRightXZ + input.moveDirection.y * camForwardXZ;
-            MoveDirection();
-            speed = moveSpeed * angleSlow;
-            anim.SetFloat("Move", speed);
-            rb.MovePosition(transform.position += speed * moveDir * Time.deltaTime);
-            Player.Instance.ctrl.lastMoveSpeed = moveSpeed;
+            if (player.isDead) continue;
         }
     }
-    void MoveDirection()
-    {
-        transform.forward = Vector3.Slerp(transform.forward, moveDir, 3.3f * Time.deltaTime);
-        float angle = Vector3.Angle(transform.forward, moveDir);
-        angleSlow = 1f - angle * 0.00277f;
-    }
-    float angleSlow = 1f;
-
-
 }

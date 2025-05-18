@@ -7,6 +7,8 @@ public class SettingsUI : MonoBehaviour
     [Header("패널")]
     public GameObject settingsPanel;
     public GameObject rankingPanel;
+    public GameObject gameOvergPanel;
+    public GameObject dim;
 
     private RectTransform settingsTransform;
     private RectTransform rankingTransform;
@@ -34,6 +36,11 @@ public class SettingsUI : MonoBehaviour
 
         sliderVolumeBGM.value = PlayerPrefs.GetFloat("volumeBGM", 1f);
         sliderVolumeSFX.value = PlayerPrefs.GetFloat("volumeSFX", 1f);
+
+        if (gameOvergPanel != null)
+        {
+            EventHub.I.Register<EventDie>(OpenGameOver);
+        }
     }
 
     public void ToggleSettings(bool forceClose = false)
@@ -60,7 +67,7 @@ public class SettingsUI : MonoBehaviour
             settingsTransform.DOScale(Vector3.one, animationDuration)
                 .SetEase(showEase);
 
-            SoundManager.Instance.PlaySFX("UIClickSharp1");
+            SoundManager.I.PlaySFX("UIClickSharp1");
         }
         else
         {
@@ -68,7 +75,7 @@ public class SettingsUI : MonoBehaviour
                 .SetEase(hideEase)
                 .OnComplete(() => settingsPanel.SetActive(false));
 
-            SoundManager.Instance.PlaySFX("UIClickCrispy1");
+            SoundManager.I.PlaySFX("UIClickCrispy1");
         }
         PlayerPrefs.SetFloat("volumeBGM", sliderVolumeBGM.value);
         PlayerPrefs.SetFloat("volumeSFX", sliderVolumeSFX.value);
@@ -100,15 +107,15 @@ public class SettingsUI : MonoBehaviour
             rankingTransform.DOScale(Vector3.one, animationDuration)
                 .SetEase(showEase);
 
-            SoundManager.Instance.PlaySFX("UIClickSharp1");
+            SoundManager.I.PlaySFX("UIClickSharp1");
         }
         else
         {
             rankingTransform.DOScale(Vector3.one * startScale, animationDuration * 0.2f)
                 .SetEase(hideEase)
                 .OnComplete(() => rankingPanel.SetActive(false));
-            
-            SoundManager.Instance.PlaySFX("UIClickCrispy1");
+
+            SoundManager.I.PlaySFX("UIClickCrispy1");
         }
 
         isRankingVisible = !isRankingVisible;
@@ -116,7 +123,7 @@ public class SettingsUI : MonoBehaviour
 
     public void QuitGame()
     {
-        SoundManager.Instance.PlaySFX("UIClickCrispy1");
+        SoundManager.I.PlaySFX("UIClickCrispy1");
 
         Debug.Log("게임 종료 버튼 클릭됨");
 #if UNITY_EDITOR
@@ -133,13 +140,43 @@ public class SettingsUI : MonoBehaviour
     [SerializeField] Slider sliderVolumeSFX;
     public void SetVolumeBGM()
     {
-        SoundManager.Instance.SetVolumeBGM(sliderVolumeBGM.value);
-        
+        SoundManager.I.SetVolumeBGM(sliderVolumeBGM.value);
+
     }
     public void SetVolumeSFX()
     {
-        SoundManager.Instance.SetVolumeSFX(sliderVolumeSFX.value);
+        SoundManager.I.SetVolumeSFX(sliderVolumeSFX.value);
     }
 
-    
+    public void OpenGameOver(EventData ed)
+    {
+        DieData _ed = ed as DieData;
+        if (_ed.owner != Player.I.transform) return;
+
+        DOVirtual.DelayedCall(1.8f, () =>
+        {
+            
+            dim.SetActive(true);
+            rankingTransform.DOKill();
+            rankingPanel.SetActive(false);
+            rankingTransform.localScale = Vector3.one * startScale;
+            isRankingVisible = false;
+            settingsTransform.DOKill();
+            settingsPanel.SetActive(false);
+            settingsTransform.localScale = Vector3.one * startScale;
+            isSettingsVisible = false;
+
+            gameOvergPanel.SetActive(true);
+            gameOvergPanel.transform.localScale = Vector3.one * startScale;
+            gameOvergPanel.transform.DOScale(Vector3.one, animationDuration);
+            SoundManager.I.PlaySFX("GameOver");
+
+
+        });
+
+    }
+
+
+
+
 }

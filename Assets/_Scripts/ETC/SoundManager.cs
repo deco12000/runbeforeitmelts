@@ -6,12 +6,21 @@ public class SoundManager : SingletonBehaviour<SoundManager>
     protected override bool IsDontDestroy() => true;
     [SerializeField] List<AudioClip> bgmList = new List<AudioClip>();
     [SerializeField] List<AudioClip> sfxList = new List<AudioClip>();
+    [SerializeField] List<AudioClip> ambienceList = new List<AudioClip>();
     [SerializeField] SFX sfxPrefab;
     AudioSource ausBGM0;
     AudioSource ausBGM1;
+    [SerializeField] public AudioSource ausAmbience;
     AudioClip lastBGMclip;
     [ReadOnlyInspector][SerializeField] float volumeBGM = 1f;
     [ReadOnlyInspector][SerializeField] float volumeSFX = 1f;
+    protected override void Awake()
+    {
+        base.Awake();
+        transform.GetChild(0).TryGetComponent(out ausBGM0);
+        transform.GetChild(1).TryGetComponent(out ausBGM1);
+        ausAmbience = transform.Find($"Ambience").GetComponent<AudioSource>();
+    }
     public void PlayBGM(string Name, float crossFadeTime = 0f)
     {
         AudioClip clip;
@@ -49,6 +58,10 @@ public class SoundManager : SingletonBehaviour<SoundManager>
             StartCoroutine("PlayBGM_co", crossFadeTime);
         }
     }
+    public void PlayAmbience(string Name)
+    {
+        
+    }
     IEnumerator PlayBGM_co(float crossFadeTime)
     {
         float startTime = Time.time;
@@ -64,7 +77,7 @@ public class SoundManager : SingletonBehaviour<SoundManager>
         ausBGM1.volume = 0f;
         ausBGM1.Stop();
     }
-    public SFX PlaySFX(string Name, Vector3 pos, Transform parent = null)
+    public SFX PlaySFX(string Name, Vector3 pos, Transform parent = null, float spatial = 0)
     {
         int find = -1;
         for (int i = 0; i < sfxList.Count; i++)
@@ -78,20 +91,14 @@ public class SoundManager : SingletonBehaviour<SoundManager>
         }
         if (find == -1) return null;
         if (parent == null) parent = transform;
-        PoolBehaviour pb = PoolManager.Instance.Spawn(sfxPrefab, pos, Quaternion.identity, parent);
+        PoolBehaviour pb = PoolManager.I?.Spawn(sfxPrefab, pos, Quaternion.identity, parent, 20);
         SFX _pb = pb as SFX;
-        _pb.PlayDespawn(sfxList[find], volumeSFX, sfxList[find].length);
+        _pb.Play(sfxList[find], volumeSFX, sfxList[find].length, spatial);
         return _pb;
     }
     public SFX PlaySFX(string Name, Transform parent = null)
     {
        return PlaySFX(Name, Vector3.zero,null);
-    }
-    protected override void Awake()
-    {
-        base.Awake();
-        transform.GetChild(0).TryGetComponent(out ausBGM0);
-        transform.GetChild(1).TryGetComponent(out ausBGM1);
     }
     void Start()
     {

@@ -18,7 +18,7 @@ public class PoolManager : SingletonBehaviour<PoolManager>
         prefabs.ToList().ForEach(x => x.Value.Clear());
         prefabs.Clear();
     }
-    public void WarmPool(PoolBehaviour pb, int size = 50)
+    public void WarmPool(PoolBehaviour pb, int size = 10)
     {
         if (prefabs.ContainsKey(pb))
         {
@@ -49,14 +49,15 @@ public class PoolManager : SingletonBehaviour<PoolManager>
         );
         prefabs.Add(pb, pool);
     }
-    public PoolBehaviour Spawn(PoolBehaviour pb, Vector3 pos, Quaternion rot, Transform parent = null)
+    public PoolBehaviour Spawn(PoolBehaviour pb, Vector3 pos, Quaternion rot, Transform parent = null, int size = 10)
     {
         if(prefabs.ContainsKey(pb) == false)
         {
-            WarmPool(pb);
+            WarmPool(pb, size);
         }
         var pool = prefabs[pb];
         PoolBehaviour clone = pool.Get();
+        clone.transform.name = clone.transform.name.Split("(Clone)")[0];
         clone.transform.SetPositionAndRotation(pos,rot);
         if(parent == null) clone.transform.SetParent(transform);
         else clone.transform.SetParent(parent);

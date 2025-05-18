@@ -5,8 +5,11 @@ public class DeadZone : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            AttackData attackData = new AttackData(transform, Player.Instance.ctrl.transform, 100f);
-            EventHub.Instance.Invoke<EventAttack>(attackData);
+            if (Player.I.isDead) return;
+            AttackData attackData = new AttackData(transform, Player.I.transform, 100f);
+            EventHub.I.Invoke<EventAttack>(attackData);
+            ParticleManager.I.PlayParticle("Hit", Player.I.transform.position + 0.5f * Vector3.up, Quaternion.identity);
+            SoundManager.I.PlaySFX("Hit");
         }
     }
 }

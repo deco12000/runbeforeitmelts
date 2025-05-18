@@ -4,8 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 public class EventHub : SingletonBehaviour<EventHub>
 {
-    // 이벤트 허브.  만든이 : 김장훈
-    protected override bool IsDontDestroy() => true;
+    protected override bool IsDontDestroy() => false;
     void OnEnable()
     {
         Init();
@@ -32,8 +31,6 @@ public class EventHub : SingletonBehaviour<EventHub>
     public void Invoke<T>(EventData eventData = null) where T : Event
     {
         if(dictionary.ContainsKey(typeof(T).Name))
-            dictionary[typeof(T).Name].action.Invoke(eventData);
+            dictionary[typeof(T).Name].action?.Invoke(eventData);
     }
-
-    
 }

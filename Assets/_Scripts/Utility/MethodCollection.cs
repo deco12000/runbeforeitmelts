@@ -16,8 +16,6 @@ public static class MethodCollection
             values[i] = value;
         }
     }
-
-
     // 길이 length의 랜덤 문자열 생성. 만든사람 : 김장훈
     // 사용법 : string str = RandomString(8);
     private const string VALID_CHARS = "0123456789abcdefghijklmnopqrstuvwxyz";
@@ -33,9 +31,7 @@ public static class MethodCollection
         }
         return sb.ToString();
     }
-
-
-    // 이름 맨 앞에 --- 가 붙은것을 제외하고, 씬에서 실질적인 최상위 루트를 찾아주는 메소드.  만든사람 : 김장훈
+    // 이름 맨 앞에 ---가 붙은것을 제외하고, 씬에서 실질적인 최상위 루트를 찾아주는 메소드.  만든사람 : 김장훈
     // 사용법 : 콜라이더나 트랜스폼 뒤에 .Root()
     public static Transform Root(this Collider x)
     {

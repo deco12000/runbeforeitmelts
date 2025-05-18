@@ -59,6 +59,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -104,47 +107,47 @@ MonoBehaviour:
   fogMode: 10
   messagePreset: 0
   messageTimeOfDay: 0
-  presetMaterial: {fileID: 2100000, guid: 6d8d2073385f92643b96552c9e56c090, type: 2}
+  presetMaterial: {fileID: 0}
   presetDay: {fileID: 0}
   presetNight: {fileID: 0}
   timeOfDay: 0
   categoryFog: 1
-  fogIntensity: 0.2
+  fogIntensity: 0.7
   fogAxisMode: 1
   fogLayersMode: 10
   fogCameraMode: 0
-  fogColorStart: {r: 1, g: 1, b: 1, a: 1}
-  fogColorEnd: {r: 0.4009621, g: 0.8232177, b: 1.2319416, a: 1}
-  fogColorDuo: 1
-  fogDistanceStart: 30
-  fogDistanceEnd: 300
-  fogDistanceFalloff: 3
-  fogHeightStart: -50
+  fogColorStart: {r: 0.6852527, g: 0.7530037, b: 0.8207547, a: 1}
+  fogColorEnd: {r: 0.6594594, g: 0.7075821, b: 0.7557048, a: 1}
+  fogColorDuo: 0
+  fogDistanceStart: 20
+  fogDistanceEnd: 200
+  fogDistanceFalloff: 1
+  fogHeightStart: 5
   fogHeightEnd: 200
   fogHeightFalloff: 1
   farDistanceHeight: 0
-  farDistanceOffset: 0
+  farDistanceOffset: 10
   categorySkybox: 1
-  skyboxFogIntensity: 0.5
-  skyboxFogHeight: 1
-  skyboxFogFalloff: 3
-  skyboxFogOffset: 0
+  skyboxFogIntensity: 0.4
+  skyboxFogHeight: 2
+  skyboxFogFalloff: 7
+  skyboxFogOffset: 0.2
   skyboxFogBottom: 0
   skyboxFogFill: 0
   categoryDirectional: 1
   directionalIntensity: 1
   directionalFalloff: 1
-  directionalColor: {r: 0.8207547, g: 0.8207547, b: 0.8207547, a: 1}
+  directionalColor: {r: 1, g: 0.75, b: 0.5, a: 1}
   categoryNoise: 1
   noiseIntensity: 1
   noiseMin: 0
   noiseMax: 1
-  noiseScale: 1
-  noiseSpeed: {x: 0.1, y: 0.1, z: 0.1}
-  noiseDistanceEnd: 5
+  noiseScale: 30
+  noiseSpeed: {x: 0.5, y: 0, z: 0.5}
+  noiseDistanceEnd: 200
   categoryAdvanced: 1
   jitterIntensity: 0
-  renderPriority: 2
+  renderPriority: 1
   manualPositionAndScale: 0
   styledSpace0: 0
   overrideMaterial: {fileID: 0}

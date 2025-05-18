@@ -1,27 +1,25 @@
 using System.Threading;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
-using System.Collections.Generic;
-public class AbilityGravity : MonoBehaviour, IAblity
+public class AbilityGravity : Ability
 {
-    #region IAblity Implement
-    bool IAblity.enabled
+    #region Implement Setting
+    protected override bool Enabled
     {
         get => this.enabled;
         set => this.enabled = value;
     }
     float multiplier;
-    void IAblity.MultiplierUpdate(float total) => multiplier = total;
+    public override void UpdateMultiplier(float m) => multiplier = m;
     #endregion
     #region UniTask Setting
     CancellationTokenSource cts;
     void OnEnable()
     {
         cts = new CancellationTokenSource();
-        Application.quitting += () => UniTaskCancel();
-        // ↓ Init ↓
-        TryGetComponent(out rb);
-        Fall(cts.Token).Forget();
+        Application.quitting += UniTaskCancel;
+        ///////////////////
+        FallLoop(cts.Token).Forget();
     }
     void OnDisable() { UniTaskCancel(); }
     void OnDestroy() { UniTaskCancel(); }
@@ -35,139 +33,164 @@ public class AbilityGravity : MonoBehaviour, IAblity
         catch (System.Exception e)
         {
 
-            Debug.Log(e);
+            Debug.Log(e.Message);
         }
         cts = null;
     }
     #endregion
-    Rigidbody rb;
-    Player player;
-    PlayerHealth playerHP;
-    PlayerInput input;
     Transform camTr;
-    bool isFall;
-    bool isLand;
-    float startTime;
-    Collider lastColl;
-    public float airControlSpeed = 3.5f;
-    public float airControlRotate = 0.3f;
-    async UniTask Fall(CancellationToken token)
+    [SerializeField] float moveSpeedAir = 3.5f;
+    [SerializeField] float rotateSpeedAir = 0.3f;
+    [SerializeField] float groundCheckRadius = 0.3f;
+    [SerializeField] float gravityAcc = -9.8f;
+    [SerializeField] float gravityMaxSpeed = -20f;
+    bool isInit;
+    Player player;
+    PlayerInput input;
+    Rigidbody rb;
+    Animator anim;
+    float fallTime;
+    float startTimeLand;
+    Collider lastCollider;
+    float gravitySpeed = 0f;
+    Vector3 camForwardXZ;
+    Vector3 camRightXZ;
+    Vector3 moveDir;
+    float slowAngle = 1f;
+    float test;
+    void Start()
     {
-        await UniTask.DelayFrame(10, cancellationToken: token);
+        camTr = Player.I.camTr;
+        TryGetComponent(out rb);
+        TryGetComponent(out player);
+        player.TryGetComponent(out input);
+        anim = GetComponentInChildren<Animator>();
+        isInit = true;
+        test = Time.time;
+    }
+    async UniTask FallLoop(CancellationToken token)
+    {
+        float landTime = 0.2f;
         while (!token.IsCancellationRequested)
         {
-            if (player == null) player = Player.Instance;
-            if (input == null) input = Player.Instance.input;
-            if (camTr == null) camTr = Player.Instance.cam.cam.transform;
-            if ( playerHP == null) playerHP = Player.Instance.ctrl.GetComponent<PlayerHealth>();
-            await UniTask.DelayFrame(1, cancellationToken: token);
-            if(playerHP.isDead)
+            await UniTask.WaitForFixedUpdate(cancellationToken: token);
+            if (!isInit) continue;
+            if (!IsGround())
             {
-                if(!player.ctrl.anim.GetCurrentAnimatorStateInfo(0).IsName("Die"))
+                gravitySpeed += gravityAcc * Time.fixedDeltaTime;
+                gravitySpeed = Mathf.Clamp(gravitySpeed, gravityMaxSpeed, 0f);
+                if (input.moveDirection != Vector2.zero)
                 {
-                    player.ctrl.anim.SetTrigger("Die");
-                    player.ctrl.anim.Play("Die");
-                }
-            }
-            if (IsGround())
-            {
-                if (player.state == "Fall" && Time.time - startTime > 0.065f)
-                {
-                    if (isFall) isFall = false;
-                    if (player.ctrl.anim) player.ctrl.anim.SetTrigger("Land");
-                    player.prevState = "Fall";
-                    player.state = "Land";
-                    await UniTask.Delay(250, cancellationToken: token);
-                    player.prevState = "Land";
-                    player.state = "Idle";
-                    player.ctrl.EnableAblity<AbilityMove>("Fall");
-                    if(input.moveDirection != Vector2.zero)
+                    camForwardXZ = camTr.forward;
+                    camForwardXZ.y = 0;
+                    camRightXZ = camTr.right;
+                    camRightXZ.y = 0;
+                    if (camForwardXZ == Vector3.zero)
                     {
-                        player.ctrl.anim.SetFloat("Move", 2f);
+                        camForwardXZ = Quaternion.Euler(0f, -90f, 0f) * camRightXZ;
                     }
-                }
-                // 버그 픽스
-                else if(player.state == "Idle")
-                {
-                    if(player.ctrl.anim.GetCurrentAnimatorStateInfo(0).IsName("Fall"))
+                    else if (camRightXZ == Vector3.zero)
                     {
-                        player.ctrl.anim.Play("Land");
-                        player.prevState = "Fall";
-                        player.state = "Land";
+                        camRightXZ = Quaternion.Euler(0f, 90f, 0f) * camForwardXZ;
                     }
+                    camForwardXZ.Normalize();
+                    camRightXZ.Normalize();
+                    moveDir = input.moveDirection.x * camRightXZ + input.moveDirection.y * camForwardXZ;
+                    transform.forward = Vector3.Slerp(transform.forward, moveDir, rotateSpeedAir * Time.fixedDeltaTime);
                 }
-                continue;
-            }
-            bool isDontGravityState = false;
-            isDontGravityState |= player.state == "JumpStart";
-            isDontGravityState |= player.state == "TissueSkill";
-            if (isDontGravityState)
-            {
-                if (isFall) isFall = false;
-                if (rb.useGravity) rb.useGravity = false;
-                continue;
-            }
-            if (!isFall)
-            {
-                isFall = true;
-                startTime = Time.time;
-                if (lastColl)
+                else moveDir = Vector3.zero;
+                slowAngle = 1f - Vector3.Angle(transform.forward, moveDir) * 0.00277f;
+                //rb.MovePosition(transform.position + (moveSpeedAir * slowAngle * moveDir +  gravitySpeed * Vector3.up) * Time.fixedDeltaTime);
+                rb.linearVelocity = (moveSpeedAir * slowAngle * moveDir + gravitySpeed * Vector3.up);
+                if (player.state != "Fall" && player.state != "Land" && player.state != "Die")
                 {
-                    Vector3 forceDir;
-                    Vector3 vector1 = transform.position - lastColl.ClosestPoint(transform.position);
-                    Vector3 vector2 = transform.position - lastColl.transform.position;
-                    vector1.y = 0f;
-                    vector2.y = 0f;
-                    forceDir = (0.7f * vector1 + 0.3f * vector2).normalized;
-                    if (player.prevState != "JumpStart") rb.AddForce(forceDir * 3f, ForceMode.VelocityChange);
-                }
-                player.ctrl.DisableAblity<AbilityMove>("Fall");
-                if (!rb.useGravity) rb.useGravity = true;
-                if (player.state != "Fall")
-                {
-                    player.prevState = player.state;
+                    //Debug.Log($"{player.state}->Fall");
+                    anim.CrossFade("Fall", 0.15f);
                     player.state = "Fall";
+                    player.DisableAbility<AbilityMove>("Fall");
+                    fallTime = Time.time;
                 }
-                if (player.ctrl.anim) player.ctrl.anim.SetTrigger("Fall");
             }
             else
             {
-                Vector3 camForwardXZ = camTr.forward;
-                camForwardXZ.y = 0f;
-                Vector3 camRightXZ = Quaternion.Euler(0f, 90f, 0f) * camForwardXZ;
-                if(camForwardXZ == Vector3.zero)
+                if (player.state == "Fall")
                 {
-                    camRightXZ = camTr.right;
-                    camRightXZ.y = 0f;
-                    camForwardXZ = Quaternion.Euler(0f,-90f,0f) * camRightXZ;
+                    //Debug.Log(Time.time - test);
+                    //Debug.Log("Fall->Land");
+                    rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+                    anim.CrossFade("Land", 0.15f);
+                    player.state = "Land";
+                    ParticleManager.I.PlayParticle("LandDust", transform.position,Quaternion.identity);
+                    //rb.linearVelocity = 0.6f * rb.linearVelocity;
+                    startTimeLand = Time.time;
+                    fallTime = Time.time - fallTime;
+                    if (fallTime > 0.2f)
+                    {
+                        SoundManager.I.PlaySFX("Land");
+                    }
+                    if (fallTime < 0.2f) landTime = 0f;
+                        else if (fallTime < 1f) landTime = 0.2f + (fallTime * 0.1f);
+                        else landTime = 0.4f;
                 }
-                Vector3 controlDir = input.moveDirection.y * camForwardXZ + input.moveDirection.x * camRightXZ;
-                controlDir.Normalize();
-                rb.MovePosition(transform.position + airControlSpeed * controlDir * Time.deltaTime);
-                transform.forward = Vector3.Lerp(transform.forward, controlDir, airControlRotate * Time.deltaTime);
-
+                if (player.state == "Land")
+                {
+                    //fallTime시간이 클수록 Land시간이 길어지게 처리
+                    //Debug.Log(Time.time - startTimeLand);
+                    if (Time.time - startTimeLand > landTime)
+                    {
+                        //Debug.Log($"{player.state}->Idle");
+                        anim.CrossFade("Idle", 0.3f);
+                        player.state = "Idle";
+                        player.EnableAbility<AbilityMove>("Fall");
+                        //player.EnableAbility<AbilityJump>("Fall");
+                        rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+                    }
+                }
+                if (gravitySpeed != 0) gravitySpeed = 0f;
             }
+            if (player.isDead) continue;
         }
     }
+    Collider[] collsGround = new Collider[30];
     bool IsGround()
     {
-        for (int i = 0; i < 30; i++) _colls[i] = null;
-        Physics.OverlapSphereNonAlloc(transform.position + 0.22f * Vector3.up, 0.23f, _colls);
-        for (int i = 0; i < 30; i++)
+        if (transform.position.y <= -0.2)
         {
-            if (_colls[i] == null) continue;
-            if (_colls[i].isTrigger) continue;
-            if (_colls[i].Root() == transform) continue;
-            lastColl = _colls[i];
-            player.ctrl.isGround = true;
+            player.isGround = true;
             return true;
         }
-        player.ctrl.isGround = false;
+
+        int count = Physics.OverlapSphereNonAlloc(transform.position + (groundCheckRadius - 0.07f) * Vector3.up, groundCheckRadius * 0.9f, collsGround);
+#if UNITY_EDITOR
+        DebugExtension.DebugWireSphere(transform.position + (groundCheckRadius - 0.07f) * Vector3.up, groundCheckRadius * 0.9f);
+#endif
+        for (int i = 0; i < count; i++)
+        {
+            if (collsGround[i] == null) continue;
+            if (collsGround[i].isTrigger) continue;
+            if (collsGround[i].Root() == transform) continue;
+            lastCollider = collsGround[i];
+            player.isGround = true;
+            return true;
+        }
+        player.isGround = false;
         return false;
     }
-    Collider[] _colls = new Collider[30];
-
-
+    public void Acceleration(Vector3 force, float time)
+    {
+        Acceleration_ut(force, time, cts.Token).Forget();
+    }
+    async UniTask Acceleration_ut(Vector3 force, float time, CancellationToken token)
+    {
+        float startTime = Time.time;
+        while (!token.IsCancellationRequested && Time.time - startTime < time)
+        {
+            await UniTask.WaitForFixedUpdate(cancellationToken: token);
+            Vector3 lerp = Vector3.Lerp(force, 0.1f * force, (Time.time - startTime) / time);
+            rb.linearVelocity = new Vector3(lerp.x, rb.linearVelocity.y, lerp.z);
+            if (player.state == "Land" || player.state == "Land") break;
+        }
+    }
 
 
 
