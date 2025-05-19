@@ -584,6 +584,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerCanvas: {fileID: 1730141083}
+  setting: {fileID: 0}
 --- !u!4 &429164436
 Transform:
   m_ObjectHideFlags: 0
@@ -1036,6 +1037,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: EventHub
       objectReference: {fileID: 0}
+    - target: {fileID: 7935169459040999114, guid: 632ea510e3cefdc4fb078e2a5c4efb75, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8561043871157171729, guid: 632ea510e3cefdc4fb078e2a5c4efb75, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1272,6 +1277,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3155464461962421552, guid: d2c61d4df4cc30e4f95d478d39cf1860, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5005894636273047174, guid: d2c61d4df4cc30e4f95d478d39cf1860, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5005894636273047174, guid: d2c61d4df4cc30e4f95d478d39cf1860, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5005894636273047174, guid: d2c61d4df4cc30e4f95d478d39cf1860, type: 3}
+      propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5508644827626551891, guid: d2c61d4df4cc30e4f95d478d39cf1860, type: 3}

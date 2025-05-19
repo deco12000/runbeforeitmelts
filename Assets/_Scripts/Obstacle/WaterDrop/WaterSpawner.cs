@@ -35,7 +35,7 @@ public class WaterSpawner : MonoBehaviour
                 pos = player.position;
                 pos.y = player.position.y + Random.Range(15f, 35f);
             }
-            else if (Random.Range(0, 100) < 48)
+            else if (Random.Range(0, 100) < 60)
             {
                 pos = player.position + 10f * player.forward + Random.Range(0f, 15f) * Random.insideUnitSphere;
                 pos.y = player.position.y + Random.Range(15f, 35f);
@@ -104,7 +104,7 @@ public class WaterSpawner : MonoBehaviour
                     rateOverTime.constant = originalValue3;
                     emission.rateOverTime = rateOverTime;
                 }
-                yield return YieldInstructionCache.WaitForSeconds(0.15f);
+                yield return YieldInstructionCache.WaitForSeconds(0.25f);
             }
             if (isInside) yield return YieldInstructionCache.WaitForSeconds(1f);
             if (isInside) yield return YieldInstructionCache.WaitForSeconds(1f);

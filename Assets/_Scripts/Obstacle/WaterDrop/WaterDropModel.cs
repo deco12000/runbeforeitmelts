@@ -94,8 +94,8 @@ public class WaterDropModel : MonoBehaviour
         //속도 랜덤?
         _velocity = Vector3.zero;
         _velocity.y = UnityEngine.Random.Range(-7f, -17f);
-        deformer.MagnitudeScalar = 0.1f;
-        deformer.OffsetSpeedScalar = 2f;
+        deformer.MagnitudeScalar = 0.15f;
+        deformer.OffsetSpeedScalar = 2.5f;
         deformable.UpdateMode = UpdateMode.Auto;
         isFall = true;
         await UniTask.DelayFrame(1, cancellationToken: token);
@@ -115,10 +115,10 @@ public class WaterDropModel : MonoBehaviour
         isSetting = true;
         while (!token.IsCancellationRequested && isFall)
         {
-            await UniTask.DelayFrame(2, cancellationToken: token);
+            await UniTask.WaitForFixedUpdate(cancellationToken: token);
             var localTransform = entityManager.GetComponentData<LocalTransform>(waterDropEntity); // 최신화
             float3 pos = localTransform.Position;
-            pos += (float3)_velocity * 2f * Time.deltaTime;
+            pos += (float3)_velocity * Time.fixedDeltaTime;
             localTransform.Position = pos;
             entityManager.SetComponentData(waterDropEntity, localTransform);
             waterDrop.transform.position = pos; // DOTS → GameObject 위치 반영
@@ -126,7 +126,19 @@ public class WaterDropModel : MonoBehaviour
             {
                 isFall = false;
                 waterDrop.DeSpawn();
-            }   
+            }
+
+            //--------DOTS화--------
+            if (!isSetting) continue;
+            if (entityManager == null) continue;
+            if (waterDropEntity == Entity.Null) continue;
+            if (!isFall) continue;
+            if (entityManager.Exists(waterDropEntity))
+            {
+                var _localTransform = entityManager.GetComponentData<LocalTransform>(waterDropEntity);
+                waterDrop.transform.position = _localTransform.Position; // DOTS → GameObject 위치 반영
+            }
+            //----------------------
         }
         await UniTask.DelayFrame(1, cancellationToken: token);
         if (Physics.Raycast(waterDrop.transform.position + 4f * Vector3.up, Vector3.down, out hitGround, 4.1f, 1 << 0))
@@ -138,20 +150,6 @@ public class WaterDropModel : MonoBehaviour
             entityManager.SetComponentData(waterDropEntity, localTransform);
         }
     }
-    //--------DOTS화--------
-    void LateUpdate()
-    {
-        if (!isSetting) return;
-        if (entityManager == null) return;
-        if (waterDropEntity == Entity.Null) return;
-        if (!isFall) return;
-        if (entityManager.Exists(waterDropEntity))
-        {
-            var localTransform = entityManager.GetComponentData<LocalTransform>(waterDropEntity);
-            waterDrop.transform.position = localTransform.Position; // DOTS → GameObject 위치 반영
-        }
-    }
-    //----------------------
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer != 0) return;
@@ -163,20 +161,19 @@ public class WaterDropModel : MonoBehaviour
             if (UnityEngine.Random.Range(0, 100) < 50)
                 SoundManager.I.PlaySFX("WaterDrop", transform.position, spatial: 0.8f);
             else
-                SoundManager.I.PlaySFX("WaterDrop(1)", transform.position, spatial: 0.8f);
-            
-            waterDrop.DespawnTime();
-            deformer.MagnitudeScalar = 0.045f;
-            deformer.OffsetSpeedScalar = 1f;
-            deformable.UpdateMode = UpdateMode.Stop;
-            verts = mesh.vertices;
-            startVertices = new Vector3[verts.Length];
-            targetVertices = new Vector3[verts.Length];
-            Array.Copy(verts, startVertices, verts.Length);
-            Array.Copy(verts, targetVertices, verts.Length);
-            Method1();
-            Method2();
-            DeformLoop1(cts.Token).Forget();
+                SoundManager.I.PlaySFX("WaterDrop(1)", transform.position, spatial: 0.8f);            
+            // waterDrop.DespawnTime();
+            // deformer.MagnitudeScalar = 0.045f;
+            // deformer.OffsetSpeedScalar = 1f;
+            // deformable.UpdateMode = UpdateMode.Stop;
+            // verts = mesh.vertices;
+            // startVertices = new Vector3[verts.Length];
+            // targetVertices = new Vector3[verts.Length];
+            // Array.Copy(verts, startVertices, verts.Length);
+            // Array.Copy(verts, targetVertices, verts.Length);
+            // Method1();
+            // Method2();
+            // DeformLoop1(cts.Token).Forget();
         }
     }
     void Method1()
