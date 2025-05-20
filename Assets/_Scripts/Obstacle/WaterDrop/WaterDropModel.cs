@@ -121,7 +121,7 @@ public class WaterDropModel : MonoBehaviour
             pos += (float3)_velocity * Time.fixedDeltaTime;
             localTransform.Position = pos;
             entityManager.SetComponentData(waterDropEntity, localTransform);
-            waterDrop.transform.position = pos; // DOTS → GameObject 위치 반영
+            //waterDrop.transform.position = pos; // DOTS → GameObject 위치 반영
             if (waterDrop.transform.position.y < -20)
             {
                 isFall = false;
@@ -162,18 +162,18 @@ public class WaterDropModel : MonoBehaviour
                 SoundManager.I.PlaySFX("WaterDrop", transform.position, spatial: 0.8f);
             else
                 SoundManager.I.PlaySFX("WaterDrop(1)", transform.position, spatial: 0.8f);            
-            // waterDrop.DespawnTime();
-            // deformer.MagnitudeScalar = 0.045f;
-            // deformer.OffsetSpeedScalar = 1f;
-            // deformable.UpdateMode = UpdateMode.Stop;
-            // verts = mesh.vertices;
-            // startVertices = new Vector3[verts.Length];
-            // targetVertices = new Vector3[verts.Length];
-            // Array.Copy(verts, startVertices, verts.Length);
-            // Array.Copy(verts, targetVertices, verts.Length);
-            // Method1();
-            // Method2();
-            // DeformLoop1(cts.Token).Forget();
+            waterDrop.DespawnTime();
+            deformer.MagnitudeScalar = 0.045f;
+            deformer.OffsetSpeedScalar = 1f;
+            deformable.UpdateMode = UpdateMode.Stop;
+            verts = mesh.vertices;
+            startVertices = new Vector3[verts.Length];
+            targetVertices = new Vector3[verts.Length];
+            Array.Copy(verts, startVertices, verts.Length);
+            Array.Copy(verts, targetVertices, verts.Length);
+            Method1();
+            Method2();
+            DeformLoop1(cts.Token).Forget();
         }
     }
     void Method1()
